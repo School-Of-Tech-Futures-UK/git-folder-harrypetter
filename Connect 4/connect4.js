@@ -27,12 +27,18 @@ function takeTurn(e) {
             grid[lowestAvailableRow][colNum - 1] = "red"
             document.getElementById(`row${lowestAvailableRow + 1}-col${colNum}`).style.backgroundColor = 'red';
             player1 = "yellow"
-            checkWinnerRed()
+            checkRow()
+            checkColumn()
+            checkDiagonal1()
+            checkDiagonal2()
         } else {
             grid[lowestAvailableRow][colNum - 1] = "yellow"
             document.getElementById(`row${lowestAvailableRow + 1}-col${colNum}`).style.backgroundColor = 'yellow';
             player1 = "red"
-            checkWinnerYellow()
+            checkRow()
+            checkColumn()
+            checkDiagonal1()
+            checkDiagonal2()
         }
     }
     console.log(`Turn number ${turn}`)
@@ -47,24 +53,14 @@ function getLowestAvailableRowInColumn(columnNumber, grid) {
     return null;
 }
 
-//|| (grid[i][j] == "red" && grid[i+1][j] == "red" && grid[i+2][j] == "red" && grid[i+3][j] == "red")
 
-function checkWinnerRed(){
+function checkRow(){
     for(let i = 0; i<6; i++){
         for(let j = 0; j<7; j++){
            if   ((grid[i][j] == "red" && grid[i][j+1] == "red" && grid[i][j+2] == "red" && grid[i][j+3] == "red"))
            {  
                win_red = true
            }
-        }
-    }
-
-winnerMessage()
-}
-
-function checkWinnerYellow(){
-    for(let i = 0; i<6; i++){
-        for(let j = 0; j<7; j++){
            if   ((grid[i][j] == "yellow" && grid[i][j+1] == "yellow" && grid[i][j+2] == "yellow" && grid[i][j+3] == "yellow"))
            {  
                win_yellow = true
@@ -74,6 +70,57 @@ function checkWinnerYellow(){
 
 winnerMessage()
 }
+
+function checkColumn(){
+    for(let i = 0; i <3 ; i++){
+        for(let j = 0; j<7; j++){
+            if (grid[i][j] == "red" && grid[i+1][j] == "red" && grid[i+2][j] == "red" && grid[i+3][j] == "red")
+            {
+                win_red = true
+            }
+            if (grid[i][j] == "yellow" && grid[i+1][j] == "yellow" && grid[i+2][j] == "yellow" && grid[i+3][j] == "yellow")
+            {
+                win_yellow = true
+            }
+        }
+    }
+winnerMessage()
+}
+
+
+function checkDiagonal1(){
+    for(let i = 0; i<3; i++){
+        for(let j = 0; j<7; j++){
+            if (grid[i][j] == "red" && grid[i+1][j+1] == "red" && grid[i+2][j+2] == "red" && grid[i+3][j+3] == "red"){
+                win_red = true
+            }
+            if (grid[i][j] == "yellow" && grid[i+1][j+1] == "yellow" && grid[i+2][j+2] == "yellow" && grid[i+3][j+3] == "yellow"){
+                win_yellow = true
+            }
+        }
+    }
+winnerMessage()
+}
+
+function checkDiagonal2(){
+    for(let i = 0; i<3; i++){
+        for(let j = 7; j>2; j--){
+            if (grid[i][j] == "red" && grid[i+1][j-1] == "red" && grid[i+2][j-2] == "red" && grid[i+3][j-3] == "red"){
+                win_red = true
+            }
+            if (grid[i][j] == "yellow" && grid[i+1][j-1] == "yellow" && grid[i+2][j-2] == "yellow" && grid[i+3][j-3] == "yellow"){
+                win_yellow = true
+            }
+        }
+    }
+winnerMessage()
+}
+
+
+
+
+
+
 
 function winnerMessage(){
     if(win_red == true){
