@@ -10,7 +10,7 @@
 }
 
 .row {
-    width: 400px;
+    width: 800px;
     margin: 0px auto;
     display: flex;
     justify-content: center;
@@ -31,6 +31,14 @@ body {
     text-align: center;
 }
 
+#header{
+    font-size: 80px;
+    font-family: Georgia, 'Times New Roman', Times, serif;
+    color: black;
+    font-weight: bold;
+}
+
 #reset-button{
     margin-top: 10px;
+    font-family: Georgia, 'Times New Roman', Times, serif;
 }

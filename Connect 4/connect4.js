@@ -20,26 +20,33 @@ function takeTurn(e) {
     const colNum = id[8]
     const rowNum = id[3]
     const lowestAvailableRow = getLowestAvailableRowInColumn(colNum, grid)
+ 
 
     if (lowestAvailableRow !== null && win_red == false && win_yellow == false) {
         turn++
-        if (player1 === "red") {
-            grid[lowestAvailableRow][colNum - 1] = "red"
-            document.getElementById(`row${lowestAvailableRow + 1}-col${colNum}`).style.backgroundColor = 'red';
-            player1 = "yellow"
-            checkRow()
-            checkColumn()
-            checkDiagonal1()
-            checkDiagonal2()
-        } else {
-            grid[lowestAvailableRow][colNum - 1] = "yellow"
-            document.getElementById(`row${lowestAvailableRow + 1}-col${colNum}`).style.backgroundColor = 'yellow';
-            player1 = "red"
-            checkRow()
-            checkColumn()
-            checkDiagonal1()
-            checkDiagonal2()
+        if(turn < 42){
+            if (player1 === "red") {
+                grid[lowestAvailableRow][colNum - 1] = "red"
+                document.getElementById(`row${lowestAvailableRow + 1}-col${colNum}`).innerText = '🔴';
+                player1 = "yellow"
+            } else {
+                grid[lowestAvailableRow][colNum - 1] = "yellow"
+                document.getElementById(`row${lowestAvailableRow + 1}-col${colNum}`).innerText = '🟡';
+                player1 = "red"
+            }
         }
+        else{
+            grid[lowestAvailableRow][colNum - 1] = "yellow"
+            document.getElementById(`row${lowestAvailableRow + 1}-col${colNum}`).innerText = '🟡';
+            player1 = "red"
+            const hiddenText = document.getElementById('winner-display');
+            hiddenText.style.display = 'block'
+            hiddenText.textContent = "Nobody wins"
+        }
+        checkRow()
+        checkColumn()
+        checkDiagonal1()
+        checkDiagonal2()  
     }
     console.log(`Turn number ${turn}`)
 }
@@ -87,7 +94,6 @@ function checkColumn(){
 winnerMessage()
 }
 
-
 function checkDiagonal1(){
     for(let i = 0; i<3; i++){
         for(let j = 0; j<7; j++){
@@ -116,22 +122,19 @@ function checkDiagonal2(){
 winnerMessage()
 }
 
-
-
-
-
-
-
 function winnerMessage(){
     if(win_red == true){
         const hiddenText = document.getElementById('winner-display');
         hiddenText.style.display = 'block'
+        hiddenText.style.backgroundColor = 'red'
         hiddenText.textContent = "The winner is red!"
         }
     else if (win_yellow == true){
         const hiddenText = document.getElementById('winner-display');
         hiddenText.style.display = 'block'
+        hiddenText.style.backgroundColor = 'yellow'
         hiddenText.textContent = "The winner is yellow!"
+        hiddenText.style.color = "black"
         }
 }
 
@@ -146,7 +149,7 @@ function resetGame(){
     ]
     for(let i = 1; i<=6; i++){
         for(let j = 1; j<=7; j++){
-            document.getElementById(`row${i}-col${j}`).style.backgroundColor = 'transparent';
+            document.getElementById(`row${i}-col${j}`).innerText = '';
         }
     }
     player1 = "red"
@@ -157,6 +160,3 @@ function resetGame(){
     win_red = false
     console.log("Game was reset")
 }
-
-
-
