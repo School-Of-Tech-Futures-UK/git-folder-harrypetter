@@ -25,6 +25,8 @@
     display: none;
     background-color: red;
     color: white;
+    font-family:'Times New Roman', Times, serif;
+    font-size: 30px;
 }
 
 body {
@@ -33,9 +35,11 @@ body {
 
 #header{
     font-size: 80px;
-    font-family: Georgia, 'Times New Roman', Times, serif;
+    font-family:'Times New Roman', Times, serif;
     color: black;
     font-weight: bold;
+    justify-content: center;
+    display: flex;
 }
 
 #reset-button{
