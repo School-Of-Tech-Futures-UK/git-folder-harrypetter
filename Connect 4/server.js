@@ -1,15 +1,16 @@
 const express = require('express');
 const app = express();
 app.use(express.json())
+const cors = require('cors')
 
-const postwinner = (highscore) => {
+app.use(cors())
     
-    app.get('/highscore', (req, res) => {
-        res.json({
-            user1: highscore
-        })
-    })
-}
+app.post('/highscore', (req, res) => {
+    const winnerscore = req.body.highscore
+    console.log(winnerscore)
+    res.json('ok')
+})
+
 
 
 var bodyParser = require('body-parser');

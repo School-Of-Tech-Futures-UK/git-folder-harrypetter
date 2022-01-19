@@ -1,6 +1,3 @@
-/* eslint-disable eqeqeq */
-/* eslint-disable camelcase */
-/* eslint-disable no-unused-vars */
 const tag = document.getElementById('header')
 tag.innerText = "Connect 4"
 let turn = 0
@@ -67,19 +64,19 @@ const upload = (score) => {
   fetch('http://localhost:3000/highscore', { // Your POST endpoint
     method: 'POST',
     headers: {
-      // Content-Type may need to be completely **omitted**
-      // or you may need something
       "Content-Type": "application/json"
     },
-    body: JSON.stringify(score) // This is your file object
-  }).then(
-    response => response.json() // if the response is a JSON object
-  ).then(
-    success => console.log(success) // Handle the success response object
-  ).catch(
-    error => console.log(error) // Handle the error response object
-  );
-};
+    body: JSON.stringify({highscore:score})
+  })
+  .then(function(response) {
+    if(response.ok) {
+        return;
+    }throw new Error('Request failed.');
+    })
+    .catch(function(error) {
+    console.log(error);
+    });
+  }
 
 const checkRow = () => {
   for (let i = 0; i < 6; i++) {
@@ -162,6 +159,7 @@ const winnerMessage = () =>{
     hiddenText.textContent = 'The winner is red!'
     hiddenText.style.color = 'white'
     score = 42-turn
+    upload(score)
 
   } else if (win_yellow == true) {
     const hiddenText = document.getElementById('winner-display')
