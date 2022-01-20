@@ -9,6 +9,8 @@ let score = 0
 let game = 0
 let username = 'Harry'
 let receivedData = []
+let red_name
+let yellow_name
 
 
 let grid = [
@@ -19,6 +21,12 @@ let grid = [
   [null, null, null, null, null, null, null],
   [null, null, null, null, null, null, null]
 ]
+
+const takeNames = () =>{
+  red_name = document.getElementById('rname').value + " (Red)"
+  yellow_name = document.getElementById('yname').value + " (Yellow)"
+}
+
 
 const takeTurn = (e) => {
   const id = e.target.id // rowX-colY
@@ -64,14 +72,13 @@ const getLowestAvailableRowInColumn = (columnNumber, grid) => {
  
 
 
-const upload = (score) => {
-username = 'Harry'
+const upload = (winner_name, score) => {
 fetch('http://localhost:3000/highscore', { // Your POST endpoint
   method: 'POST',
   headers: {
     "Content-Type": "application/json"
   },
-  body: JSON.stringify({ Username : username, Score :score})
+  body: JSON.stringify({ Username : winner_name, Score :score})
 })
 .then(function(response) {
   if(response.ok) {
@@ -168,7 +175,7 @@ const winnerMessage = () =>{
     hiddenText.textContent = 'The winner is red!'
     hiddenText.style.color = 'white'
     score = 42-turn
-    upload(score)
+    upload(red_name,score)
     download()
     setTimeout(() => { printHighScores()
     }, 200);
@@ -182,7 +189,7 @@ const winnerMessage = () =>{
     hiddenText.textContent = 'The winner is yellow!'
     hiddenText.style.color = 'black'
     score = 42-turn
-    upload(score)
+    upload(yellow_name, score)
     download()
     setTimeout(() => { printHighScores()
       }, 200);
@@ -217,7 +224,10 @@ const printHighScores = () => {
   highscoreboard.innerHTML = ""
   highscoreboard.style.display = 'block'
   for(var i=0; i < receivedData.length; i++){
-    highscoreboard.innerHTML += "<p>"+ receivedData[i].Username +" : " + receivedData[i].Score+"</p><br>"}
+    if (i < 10){
+      highscoreboard.innerHTML += "<p>"+ receivedData[i].Username +" : " + receivedData[i].Score+"</p><br>"
+    }
+  }
 }
 
 const resetGame = () => {
