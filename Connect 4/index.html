@@ -13,13 +13,21 @@
 </head>
 
 <body>
-    </br></br></br>
+    <div></br></br>
+        <form action="/action_page.php">
+            <label for="fname">Enter red player name:</label><br>
+            <input type="text" id="fname" name="fname"><br>
+            <label for="lname">Enter yellow player name:</label><br>
+            <input type="text" id="lname" name="lname"><br>
+            <input type="submit" value="Submit">
+          </form>
+    </div>
+    </br>
     <h1 id="header"> </h1>
     <script src="connect4.js" crossorigin="anonymous"></script>
     </br>
     <div id="connect4Board">
-        <div class = "highscore">Highscore red:     Highscore yellow:</div>
-        <p id="winner-display" style ="display: none;"></p>
+        </br><p id="winner-display" style ="display: none;"></p>
         <div class="row">
             <div class="col" id="row1-col1" onClick="takeTurn(event);"> </div>
             <div class="col" id="row1-col2" onClick="takeTurn(event);"> </div>
@@ -77,6 +85,7 @@
     </div>
     </br></br>
     <button id="reset-button" onClick = "resetGame();">Reset</button>
+</br></br><p id = "highscore"style ="display: none;"></p></br>
 
 
 </body>

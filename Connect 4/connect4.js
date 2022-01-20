@@ -8,6 +8,7 @@ let nobody = false
 let score = 0
 let game = 0
 let username = 'Harry'
+let receivedData = []
 
 
 let grid = [
@@ -64,43 +65,32 @@ const getLowestAvailableRowInColumn = (columnNumber, grid) => {
 
 
 const upload = (score) => {
-  username = 'Harry'
-  fetch('http://localhost:3000/highscore', { // Your POST endpoint
-    method: 'POST',
-    headers: {
-      "Content-Type": "application/json"
-    },
-    body: JSON.stringify({ Username : username, Score :score})
+username = 'Harry'
+fetch('http://localhost:3000/highscore', { // Your POST endpoint
+  method: 'POST',
+  headers: {
+    "Content-Type": "application/json"
+  },
+  body: JSON.stringify({ Username : username, Score :score})
+})
+.then(function(response) {
+  if(response.ok) {
+      return;
+  }throw new Error('Request failed.');
   })
-  .then(function(response) {
-    if(response.ok) {
-        return;
-    }throw new Error('Request failed.');
-    })
-    .catch(function(error) {
-    console.log(error);
-    });
-  }
+  .catch(function(error) {
+  console.log(error);
+  });
+}
 
 
-const download = (score) => {
-  username = 'Harry'
-  fetch('http://localhost:3000/highscore', { // Your POST endpoint
-    method: 'POST',
-    headers: {
-      "Content-Type": "application/json"
-    },
-    body: JSON.stringify({ Username : username, Score :score})
-  })
-  .then(function(response) {
-    if(response.ok) {
-        return;
-    }throw new Error('Request failed.');
-    })
-    .catch(function(error) {
-    console.log(error);
-    });
-  }
+const download = async () => {
+  console.log('downloading data')
+  const resp = await fetch('http://localhost:3000/highscore')
+  const json = await resp.json()
+  console.log(json)
+  receivedData = json
+}
 
 const checkRow = () => {
   for (let i = 0; i < 6; i++) {
@@ -179,6 +169,11 @@ const winnerMessage = () =>{
     hiddenText.style.color = 'white'
     score = 42-turn
     upload(score)
+    download()
+    setTimeout(() => { printHighScores()
+    }, 200);
+
+
 
   } else if (win_yellow == true) {
     const hiddenText = document.getElementById('winner-display')
@@ -188,15 +183,23 @@ const winnerMessage = () =>{
     hiddenText.style.color = 'black'
     score = 42-turn
     upload(score)
+    download()
+    setTimeout(() => { printHighScores()
+      }, 200);
+
+
   } else if (nobody == true) {
     const hiddenText = document.getElementById('winner-display')
     hiddenText.style.display = 'block'
     hiddenText.textContent = 'Nobody wins'
     hiddenText.style.backgroundColor = 'blue'
     hiddenText.style.color = 'white'
+
   } else {
     const hiddenText = document.getElementById('winner-display')
     hiddenText.style.display = 'none'
+    const highscoreboard = document.getElementById('highscore')
+    highscoreboard.style.display = 'none'
   }
 }
 
@@ -206,6 +209,15 @@ const drawBoard = (lowestAvailableRow, colNum) => {
   } else if (grid[lowestAvailableRow][colNum - 1] == 'yellow') {
     document.getElementById(`row${lowestAvailableRow + 1}-col${colNum}`).innerHTML = '🟡'
   }
+}
+
+const printHighScores = () => {
+  console.log(receivedData[0])
+  var highscoreboard = document.getElementById('highscore')
+  highscoreboard.innerHTML = ""
+  highscoreboard.style.display = 'block'
+  for(var i=0; i < receivedData.length; i++){
+    highscoreboard.innerHTML += "<p>"+ receivedData[i].Username +" : " + receivedData[i].Score+"</p><br>"}
 }
 
 const resetGame = () => {

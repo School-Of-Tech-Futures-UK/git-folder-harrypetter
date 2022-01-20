@@ -24,8 +24,10 @@ res.sendFile(__dirname + '/index.html');
 
 app.post('/highscore', (req, res) => {
     const winnerscore = req.body
-    res.json('can confirm I have it')
+    res.json('Data received by server')
     highscores.push(winnerscore)
+    const sortByScore = (a,b) => b.Score-a.Score
+    highscores.sort(sortByScore)
     console.log(highscores)
 })
 
@@ -33,7 +35,7 @@ app.post('/highscore', (req, res) => {
 
 
 app.get('/highscore', (req, res) => {
-    res.send(req.body.highscore)
+    res.json(highscores)
 
 })
 
