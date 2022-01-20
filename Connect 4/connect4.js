@@ -6,6 +6,8 @@ let win_red = false
 let win_yellow = false
 let nobody = false
 let score = 0
+let game = 0
+let username = 'Harry'
 
 
 let grid = [
@@ -45,6 +47,7 @@ const takeTurn = (e) => {
     checkColumn()
     checkDiagonal1()
     checkDiagonal2()
+    winnerMessage()
   }
   console.log(`Turn number ${turn}`)
 }
@@ -57,16 +60,37 @@ const getLowestAvailableRowInColumn = (columnNumber, grid) => {
   }
   return null
 }
-
+ 
 
 
 const upload = (score) => {
+  username = 'Harry'
   fetch('http://localhost:3000/highscore', { // Your POST endpoint
     method: 'POST',
     headers: {
       "Content-Type": "application/json"
     },
-    body: JSON.stringify({highscore:score})
+    body: JSON.stringify({ Username : username, Score :score})
+  })
+  .then(function(response) {
+    if(response.ok) {
+        return;
+    }throw new Error('Request failed.');
+    })
+    .catch(function(error) {
+    console.log(error);
+    });
+  }
+
+
+const download = (score) => {
+  username = 'Harry'
+  fetch('http://localhost:3000/highscore', { // Your POST endpoint
+    method: 'POST',
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify({ Username : username, Score :score})
   })
   .then(function(response) {
     if(response.ok) {
@@ -93,8 +117,6 @@ const checkRow = () => {
       }
     }
   }
-
-  winnerMessage()
 }
 
 const checkColumn = () => {
@@ -112,7 +134,6 @@ const checkColumn = () => {
       }
     }
   }
-  winnerMessage()
 }
 
 const checkDiagonal1 = () =>{
@@ -130,7 +151,6 @@ const checkDiagonal1 = () =>{
       }
     }
   }
-  winnerMessage()
 }
 
 const checkDiagonal2 = () =>{
@@ -148,7 +168,6 @@ const checkDiagonal2 = () =>{
       }
     }
   }
-  winnerMessage()
 }
 
 const winnerMessage = () =>{
@@ -167,6 +186,8 @@ const winnerMessage = () =>{
     hiddenText.style.backgroundColor = 'yellow'
     hiddenText.textContent = 'The winner is yellow!'
     hiddenText.style.color = 'black'
+    score = 42-turn
+    upload(score)
   } else if (nobody == true) {
     const hiddenText = document.getElementById('winner-display')
     hiddenText.style.display = 'block'
@@ -211,5 +232,6 @@ const resetGame = () => {
   nobody = false
   console.log('Game was reset')
   winnerMessage()
+  game++
 }
 

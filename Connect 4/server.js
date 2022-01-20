@@ -2,15 +2,10 @@ const express = require('express');
 const app = express();
 app.use(express.json())
 const cors = require('cors')
+let highscores = []
 
 app.use(cors())
     
-app.post('/highscore', (req, res) => {
-    const winnerscore = req.body.highscore
-    console.log(winnerscore)
-    res.json('ok')
-})
-
 
 
 var bodyParser = require('body-parser');
@@ -25,5 +20,23 @@ app.use(express.static(__dirname + '/'))
 app.get('/connect',function(req,res) {
 res.sendFile(__dirname + '/index.html');
 });
+
+
+app.post('/highscore', (req, res) => {
+    const winnerscore = req.body
+    res.json('can confirm I have it')
+    highscores.push(winnerscore)
+    console.log(highscores)
+})
+
+
+
+
+app.get('/highscore', (req, res) => {
+    res.send(req.body.highscore)
+
+})
+
+
 
 app.listen(3000,() => {console.log("Server started")})
