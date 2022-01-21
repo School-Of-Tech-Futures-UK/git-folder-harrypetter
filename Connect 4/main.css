@@ -1,12 +1,20 @@
+@font-face {
+    font-family: "Graphik";
+    src: url("GraphikBold.otf");
+  }
+
 .col {
-    width: 100px;
-    height: 100px;
-    margin: 0px;
-    border: 2px black solid;
+    width: 90px;
+    height: 90px;
+    margin: 7px;
+    border: 5px black solid;
     display: flex;
     justify-content: center;
     align-items: center;
     font-size: 80px;
+    border-radius: 50%;
+    background-color: white;
+
 }
 
 .row {
@@ -14,6 +22,18 @@
     margin: 0px auto;
     display: flex;
     justify-content: center;
+
+}
+
+#highscore{
+    text-align: right;
+    font-family: "Graphik";
+    font-size: x-large;
+    font-weight: normal;
+    color: white;
+    width: 380px;
+    line-height: 0.8;
+
 }
 
 .marker {
@@ -21,28 +41,129 @@
     height: 80px;
 }
 
+#connect4Board{
+    padding: 10px;
+    margin-left: auto;
+    margin-right: auto;
+    background-color: blue;
+    width: 850px;
+    height: 650px;
+    border-radius: 5%;
+
+}
+
 #winner-display {
     display: none;
     background-color: red;
     color: white;
-    font-family:'Times New Roman', Times, serif;
+    font-family:Arial, Helvetica, sans-serif;
     font-size: 30px;
+    border-radius: 3%;
+}
+
+.textboxred{
+    background-color: #ff0000;
+    color: white;
+    border-radius: 15px;
+}
+
+
+.textboxyellow{
+    background-color: #eeff00;
+    color: black;
+    border-radius: 15px;
+}
+
+#redtext{
+    -webkit-text-stroke: 0.9px black; /* width and color */
+    font-family: "Graphik";
+
+
+}
+
+#yellowtext{
+    -webkit-text-stroke: 0.9px black; /* width and color */
+    font-family: "Graphik";
+
+
+}
+
+.names{
+    font-weight: bold;
+    color: white;
+    border: 5px black solid;
+    border-radius: 5%;
+    width: 420px;
+    background-image: linear-gradient(to top left, rgb(195, 0, 255), rgb(38, 209, 252));
 }
 
 body {
     text-align: center;
+    justify-content: center;
+    background-image: linear-gradient(to bottom right, rgb(195, 0, 255), rgb(255, 140, 8));
 }
 
 #header{
-    font-size: 80px;
-    font-family:'Times New Roman', Times, serif;
-    color: black;
+    font-size: 170px;
+    font-family: "Graphik";
+    color: rgb(255, 255, 255);
     font-weight: bold;
     justify-content: center;
     display: flex;
+
+}
+
+#namesbutton{
+    margin-top: 10px;
+    font-family: "Graphik";
+    background-image: linear-gradient(to bottom right, rgb(195, 0, 255), rgb(255, 196, 35));
+    color: white;
+    border-radius: 15px;
+
 }
 
 #reset-button{
     margin-top: 10px;
-    font-family: Georgia, 'Times New Roman', Times, serif;
+    font-family: "Graphik";
+    font-size: 50px;
+    border-radius: 5%;
+    background-image: linear-gradient(to bottom right, rgb(195, 0, 255), rgb(35, 211, 255));
+    color: white;
+    border-radius: 15px;
+
 }
+
+.parent{
+    display: flex;
+    justify-content: center;
+    gap: 30px;
+
+}
+
+.LHS{
+    display: flex;
+    flex-direction: row;
+    align-content: center;
+    font-size:xx-large;
+}
+
+.RHS{
+    display: flex;
+    flex-direction: row;
+    align-content: center;
+    justify-content: center;
+
+   
+}
+
+/* 
+async function loadScores () {
+    const contents = await fs.readFile('./highscores.json', 'utf-8')
+    const data = JSON.parse(contents)
+    return data
+  }
+  
+  async function saveScores (scores) {
+    const contents = JSON.stringify(scores)
+    await fs.writeFile('./highscores.json', contents)
+  } */

@@ -9,8 +9,8 @@ let score = 0
 let game = 0
 let username = 'Harry'
 let receivedData = []
-let red_name
-let yellow_name
+let red_name = "Anonymous (Red)"
+let yellow_name = "Anonymous (Yellow)"
 
 
 let grid = [
@@ -212,20 +212,20 @@ const winnerMessage = () =>{
 
 const drawBoard = (lowestAvailableRow, colNum) => {
   if (grid[lowestAvailableRow][colNum - 1] == 'red') {
-    document.getElementById(`row${lowestAvailableRow + 1}-col${colNum}`).innerHTML = '🔴'
+    document.getElementById(`row${lowestAvailableRow + 1}-col${colNum}`).style.backgroundColor = "red"
   } else if (grid[lowestAvailableRow][colNum - 1] == 'yellow') {
-    document.getElementById(`row${lowestAvailableRow + 1}-col${colNum}`).innerHTML = '🟡'
+    document.getElementById(`row${lowestAvailableRow + 1}-col${colNum}`).style.backgroundColor = "yellow"
   }
 }
 
 const printHighScores = () => {
-  console.log(receivedData[0])
+  console.log(receivedData)
   var highscoreboard = document.getElementById('highscore')
   highscoreboard.innerHTML = ""
   highscoreboard.style.display = 'block'
   for(var i=0; i < receivedData.length; i++){
     if (i < 10){
-      highscoreboard.innerHTML += "<p>"+ receivedData[i].Username +" : " + receivedData[i].Score+"</p><br>"
+      highscoreboard.innerHTML += "<p>"+ receivedData[i].Username +" : " + receivedData[i].Score+"</p>"
     }
   }
 }
@@ -242,7 +242,7 @@ const resetGame = () => {
   
   for (let i = 1; i <= 6; i++) {
     for (let j = 1; j <= 7; j++) {
-      document.getElementById(`row${i}-col${j}`).innerText = ''
+      document.getElementById(`row${i}-col${j}`).style.backgroundColor = "white"
     }
   }
 

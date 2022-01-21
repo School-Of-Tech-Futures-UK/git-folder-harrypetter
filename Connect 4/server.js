@@ -3,7 +3,7 @@ const app = express();
 app.use(express.json())
 const cors = require('cors')
 let highscores = []
-
+fs = require('fs')
 app.use(cors())
     
 
@@ -22,6 +22,7 @@ res.sendFile(__dirname + '/index.html');
 });
 
 
+
 app.post('/highscore', (req, res) => {
     const winnerscore = req.body
     res.json('Data received by server')
@@ -29,13 +30,36 @@ app.post('/highscore', (req, res) => {
     const sortByScore = (a,b) => b.Score-a.Score
     highscores.sort(sortByScore)
     console.log(highscores)
+    const fileData = JSON.parse(fs.readFileSync('highscores.json'))
+    fs.writeFileSync('highscores.json', JSON.stringify(highscores, null, 2));
+    fileData.push(highscores)
+    
+    
 })
+
+// require('fs').appendFile(
+
+//     './highscores.json',
+
+//     JSON.stringify(highscores),
+
+//     function (err) {
+//         if (err) {
+//             console.error('Could not save file');
+//         }
+//     }
+// );
 
 
 
 
 app.get('/highscore', (req, res) => {
-    res.json(highscores)
+    const fs = require('fs');
+    fs.readFile('highscores.json', (err, data) => {
+        if (err) throw err;
+        let returnscores = JSON.parse(data);;
+        res.json(returnscores)
+        })
 
 })
 
