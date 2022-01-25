@@ -33,7 +33,7 @@ const takeTurn = (e) => {
   const colNum = id[8]
   const lowestAvailableRow = getLowestAvailableRowInColumn(colNum, grid)
  
-  if (lowestAvailableRow !== null && win_indicator === 0) {
+  if (lowestAvailableRow !== null && lowestAvailableRow >= 0 && win_indicator === 0) {
     turn++
     score = 42 - turn
     if (turn < 42) {
@@ -46,22 +46,27 @@ const takeTurn = (e) => {
         drawBoard(lowestAvailableRow, colNum)
         player1 = 'red'
       }
-    } else {
+    } 
+    else {
       grid[lowestAvailableRow][colNum] = 'yellow'
       drawBoard(lowestAvailableRow, colNum)
       player1 = 'red'
-      win_indicator = 3
+      winnerMessage(3)
     }
-    checkRow()
-    checkColumn()
-    checkDiagonal1()
-    checkDiagonal2()
-    const contactServer = winnerMessage(win_indicator)
-    if(contactServer){
-      upload(contactServer, score)
-      download()
-      setTimeout(() => {printHighScores()}, 200)
-    }   
+    let winMatrix = [
+    checkRow(win_indicator),
+    checkColumn(win_indicator),
+    checkDiagonal1(win_indicator),
+    checkDiagonal2(win_indicator)]
+    for (let i in winMatrix){
+      if (winMatrix[i]){
+        win_indicator = winMatrix[i]
+        upload(winnerMessage(win_indicator), score)
+        download()
+        setTimeout(() => {printHighScores()}, 200)
+      }
+    }
+  
   }
 }
 
@@ -97,76 +102,68 @@ const download = async () => {
   receivedData = json
 }
 
-const checkRow = () => {
+const checkRow = (data) => {
   for (let i = 0; i < 6; i++) {
     for (let j = 0; j < 7; j++) {
       if (grid[i][j] == grid[i][j + 1] &&
           grid[i][j] == grid[i][j + 2] &&
           grid[i][j] == grid[i][j + 3]) {
         if (grid[i][j] == 'red') {
-          win_indicator = 1
-          return win_indicator
+          return data = 1
         }
         if (grid[i][j] == 'yellow') {
-          win_indicator = 2
-          return win_indicator
+          return data = 2
         }
       }
     }
   }
 }
 
-const checkColumn = () => {
+const checkColumn = (data) => {
   for (let i = 0; i < 3; i++) {
     for (let j = 0; j < 7; j++) {
       if (grid[i][j] == grid[i + 1][j] &&
           grid[i][j] == grid[i + 2][j] &&
           grid[i][j] == grid[i + 3][j]) {
         if (grid[i][j] == 'red') {
-          win_indicator = 1
-          return win_indicator
+          return data = 1
         }
         if (grid[i][j] == 'yellow') {
-          win_indicator = 2
-          return win_indicator
+          return data = 2
         }
       }
     }
   }
 }
 
-const checkDiagonal1 = () => {
+const checkDiagonal1 = (data) => {
   for (let i = 0; i < 3; i++) {
     for (let j = 0; j < 7; j++) {
       if (grid[i][j] == grid[i + 1][j + 1] &&
           grid[i][j] == grid[i + 2][j + 2] &&
           grid[i][j] == grid[i + 3][j + 3]) {
         if (grid[i][j] == 'red') {
-          win_indicator = 1
-          return win_indicator
+          return data = 1
         }
         if (grid[i][j] == 'yellow') {
-          win_indicator = 2
-          return win_indicator
+          return data = 2
         }
       }
     }
   }
 }
 
-const checkDiagonal2 = () => {
+const checkDiagonal2 = (data) => {
   for (let i = 0; i < 3; i++) {
     for (let j = 7; j > 2; j--) {
       if (grid[i][j] == grid[i + 1][j - 1] &&
           grid[i][j] == grid[i + 2][j - 2] &&
           grid[i][j] == grid[i + 3][j - 3]) {
         if (grid[i][j] == 'red') {
-          win_indicator = 1
-          return win_indicator
+          return data = 1
         }
         if (grid[i][j] == 'yellow') {
-          win_indicator = 2
-          return win_indicator
+          return data = 2
         }
       }
     }
@@ -180,8 +177,7 @@ const winnerMessage = (win_indicator) => {
     hiddenText.style.backgroundColor = 'red'
     hiddenText.textContent = `The winner is ${red_name}, scoring ${score} points!`
     hiddenText.style.color = 'white'
-    contactServer = red_name
-    return contactServer
+    return red_name
 
   } else if (win_indicator == 2) {
     const hiddenText = document.getElementById('winner-display')
@@ -189,8 +185,7 @@ const winnerMessage = (win_indicator) => {
     hiddenText.style.backgroundColor = 'yellow'
     hiddenText.textContent = `The winner is ${yellow_name}, scoring ${score} points!`
     hiddenText.style.color = 'black'
-    contactServer = yellow_name
-    return contactServer
+    return yellow_name
     
 
   } else if (win_indicator == 3) {
