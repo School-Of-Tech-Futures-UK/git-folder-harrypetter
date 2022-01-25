@@ -2,18 +2,16 @@
 /* eslint-disable eqeqeq */
 /* eslint-disable prefer-const */
 /* eslint-disable camelcase */
-// const tag = document.getElementById('header')
-// tag.innerText = 'Connect 4'
 let turn = 0
 let player1 = 'red'
-let win_red = false
-let win_yellow = false
-let nobody = false
 let score = 0
-let game = 0
 let receivedData = []
 let red_name = 'Anonymous (Red)'
 let yellow_name = 'Anonymous (Yellow)'
+let win_indicator = 0 //1 if red win, 2 if yellow win, 3 if nobody win, 0 if still playing
+
+
+
 
 let grid = [
   [null, null, null, null, null, null, null],
@@ -29,42 +27,47 @@ const takeNames = () => {
   yellow_name = document.getElementById('yname').value + ' (Yellow)'
 }
 
+
 const takeTurn = (e) => {
   const id = e.target.id // rowX-colY
   const colNum = id[8]
-  const rowNum = id[3]
   const lowestAvailableRow = getLowestAvailableRowInColumn(colNum, grid)
-
-  if (lowestAvailableRow !== null && win_red == false && win_yellow == false) {
+ 
+  if (lowestAvailableRow !== null && win_indicator === 0) {
     turn++
+    score = 42 - turn
     if (turn < 42) {
       if (player1 === 'red') {
-        grid[lowestAvailableRow][colNum - 1] = 'red'
+        grid[lowestAvailableRow][colNum] = 'red'
         drawBoard(lowestAvailableRow, colNum)
         player1 = 'yellow'
       } else {
-        grid[lowestAvailableRow][colNum - 1] = 'yellow'
+        grid[lowestAvailableRow][colNum] = 'yellow'
         drawBoard(lowestAvailableRow, colNum)
         player1 = 'red'
       }
     } else {
-      grid[lowestAvailableRow][colNum - 1] = 'yellow'
+      grid[lowestAvailableRow][colNum] = 'yellow'
       drawBoard(lowestAvailableRow, colNum)
       player1 = 'red'
-      nobody = true
+      win_indicator = 3
     }
     checkRow()
     checkColumn()
     checkDiagonal1()
     checkDiagonal2()
-    winnerMessage()
+    const contactServer = winnerMessage(win_indicator)
+    if(contactServer){
+      upload(contactServer, score)
+      download()
+      setTimeout(() => {printHighScores()}, 200)
+    }   
   }
-  console.log(`Turn number ${turn}`)
 }
 
 const getLowestAvailableRowInColumn = (columnNumber, grid) => {
   for (let i = 5; i >= 0; i--) {
-    if (grid[i][columnNumber - 1] === null) {
+    if (grid[i][columnNumber] === null) {
       return i
     }
   }
@@ -89,10 +92,8 @@ const upload = (winner_name, score) => {
 }
 
 const download = async () => {
-  console.log('downloading data')
   const resp = await fetch('http://localhost:3000/highscore')
   const json = await resp.json()
-  console.log(json)
   receivedData = json
 }
 
@@ -103,12 +104,12 @@ const checkRow = () => {
           grid[i][j] == grid[i][j + 2] &&
           grid[i][j] == grid[i][j + 3]) {
         if (grid[i][j] == 'red') {
-          win_red = true
-          return win_red
+          win_indicator = 1
+          return win_indicator
         }
         if (grid[i][j] == 'yellow') {
-          win_yellow = true
-          return win_yellow
+          win_indicator = 2
+          return win_indicator
         }
       }
     }
@@ -122,12 +123,12 @@ const checkColumn = () => {
           grid[i][j] == grid[i + 2][j] &&
           grid[i][j] == grid[i + 3][j]) {
         if (grid[i][j] == 'red') {
-          win_red = true
-          return win_red
+          win_indicator = 1
+          return win_indicator
         }
         if (grid[i][j] == 'yellow') {
-          win_yellow = true
-          return win_yellow
+          win_indicator = 2
+          return win_indicator
         }
       }
     }
@@ -141,10 +142,12 @@ const checkDiagonal1 = () => {
           grid[i][j] == grid[i + 2][j + 2] &&
           grid[i][j] == grid[i + 3][j + 3]) {
         if (grid[i][j] == 'red') {
-          win_red = true
+          win_indicator = 1
+          return win_indicator
         }
         if (grid[i][j] == 'yellow') {
-          win_yellow = true
+          win_indicator = 2
+          return win_indicator
         }
       }
     }
@@ -158,48 +161,45 @@ const checkDiagonal2 = () => {
           grid[i][j] == grid[i + 2][j - 2] &&
           grid[i][j] == grid[i + 3][j - 3]) {
         if (grid[i][j] == 'red') {
-          win_red = true
+          win_indicator = 1
+          return win_indicator
         }
         if (grid[i][j] == 'yellow') {
-          win_yellow = true
+          win_indicator = 2
+          return win_indicator
         }
       }
     }
   }
 }
 
-const winnerMessage = () => {
-  if (win_red == true) {
-    score = 42 - turn
+const winnerMessage = (win_indicator) => {
+  if (win_indicator == 1) {
     const hiddenText = document.getElementById('winner-display')
     hiddenText.style.display = 'block'
     hiddenText.style.backgroundColor = 'red'
     hiddenText.textContent = `The winner is ${red_name}, scoring ${score} points!`
     hiddenText.style.color = 'white'
-    
-    upload(red_name, score)
-    download()
-    setTimeout(() => {
-      printHighScores()
-    }, 200)
-  } else if (win_yellow == true) {
-    score = 42 - turn
+    contactServer = red_name
+    return contactServer
+
+  } else if (win_indicator == 2) {
     const hiddenText = document.getElementById('winner-display')
     hiddenText.style.display = 'block'
     hiddenText.style.backgroundColor = 'yellow'
     hiddenText.textContent = `The winner is ${yellow_name}, scoring ${score} points!`
     hiddenText.style.color = 'black'
-    upload(yellow_name, score)
-    download()
-    setTimeout(() => {
-      printHighScores()
-    }, 200)
-  } else if (nobody == true) {
+    contactServer = yellow_name
+    return contactServer
+    
+
+  } else if (win_indicator == 3) {
     const hiddenText = document.getElementById('winner-display')
     hiddenText.style.display = 'block'
     hiddenText.textContent = 'Nobody wins'
     hiddenText.style.backgroundColor = 'blue'
     hiddenText.style.color = 'white'
+
   } else {
     const hiddenText = document.getElementById('winner-display')
     hiddenText.style.display = 'none'
@@ -209,10 +209,10 @@ const winnerMessage = () => {
 }
 
 const drawBoard = (lowestAvailableRow, colNum) => {
-  if (grid[lowestAvailableRow][colNum - 1] == 'red') {
-    document.getElementById(`row${lowestAvailableRow + 1}-col${colNum}`).style.backgroundColor = 'red'
-  } else if (grid[lowestAvailableRow][colNum - 1] == 'yellow') {
-    document.getElementById(`row${lowestAvailableRow + 1}-col${colNum}`).style.backgroundColor = 'yellow'
+  if (grid[lowestAvailableRow][colNum] == 'red') {
+    document.getElementById(`row${lowestAvailableRow}-col${colNum}`).style.backgroundColor = 'red'
+  } else if (grid[lowestAvailableRow][colNum ] == 'yellow') {
+    document.getElementById(`row${lowestAvailableRow }-col${colNum}`).style.backgroundColor = 'yellow'
   }
 }
 
@@ -237,20 +237,16 @@ const resetGame = () => {
     [null, null, null, null, null, null, null]
   ]
 
-  for (let i = 1; i <= 6; i++) {
-    for (let j = 1; j <= 7; j++) {
+  for (let i = 0; i < 6; i++) {
+    for (let j = 0; j < 7; j++) {
       document.getElementById(`row${i}-col${j}`).style.backgroundColor = 'white'
     }
   }
 
   player1 = 'red'
   turn = 0
-  win_yellow = false
-  win_red = false
-  nobody = false
-  console.log('Game was reset')
+  win_indicator = 0
   winnerMessage()
-  game++
 }
 
-module.exports = {getLowestAvailableRowInColumn};
+// module.exports = {lowestAvailableRow}
