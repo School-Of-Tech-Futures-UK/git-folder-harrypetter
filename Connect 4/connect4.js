@@ -2,8 +2,8 @@
 /* eslint-disable eqeqeq */
 /* eslint-disable prefer-const */
 /* eslint-disable camelcase */
-const tag = document.getElementById('header')
-tag.innerText = 'Connect 4'
+// const tag = document.getElementById('header')
+// tag.innerText = 'Connect 4'
 let turn = 0
 let player1 = 'red'
 let win_red = false
@@ -68,7 +68,6 @@ const getLowestAvailableRowInColumn = (columnNumber, grid) => {
       return i
     }
   }
-  return null
 }
 
 const upload = (winner_name, score) => {
@@ -105,9 +104,11 @@ const checkRow = () => {
           grid[i][j] == grid[i][j + 3]) {
         if (grid[i][j] == 'red') {
           win_red = true
+          return win_red
         }
         if (grid[i][j] == 'yellow') {
           win_yellow = true
+          return win_yellow
         }
       }
     }
@@ -122,9 +123,11 @@ const checkColumn = () => {
           grid[i][j] == grid[i + 3][j]) {
         if (grid[i][j] == 'red') {
           win_red = true
+          return win_red
         }
         if (grid[i][j] == 'yellow') {
           win_yellow = true
+          return win_yellow
         }
       }
     }
@@ -167,24 +170,25 @@ const checkDiagonal2 = () => {
 
 const winnerMessage = () => {
   if (win_red == true) {
+    score = 42 - turn
     const hiddenText = document.getElementById('winner-display')
     hiddenText.style.display = 'block'
     hiddenText.style.backgroundColor = 'red'
-    hiddenText.textContent = 'The winner is red!'
+    hiddenText.textContent = `The winner is ${red_name}, scoring ${score} points!`
     hiddenText.style.color = 'white'
-    score = 42 - turn
+    
     upload(red_name, score)
     download()
     setTimeout(() => {
       printHighScores()
     }, 200)
   } else if (win_yellow == true) {
+    score = 42 - turn
     const hiddenText = document.getElementById('winner-display')
     hiddenText.style.display = 'block'
     hiddenText.style.backgroundColor = 'yellow'
-    hiddenText.textContent = 'The winner is yellow!'
+    hiddenText.textContent = `The winner is ${yellow_name}, scoring ${score} points!`
     hiddenText.style.color = 'black'
-    score = 42 - turn
     upload(yellow_name, score)
     download()
     setTimeout(() => {
@@ -248,3 +252,5 @@ const resetGame = () => {
   winnerMessage()
   game++
 }
+
+module.exports = {getLowestAvailableRowInColumn};
