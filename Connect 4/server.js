@@ -26,8 +26,8 @@ app.post('/highscore', (req, res) => {
   const sortByScore = (a, b) => b.Score - a.Score
   let fileData = JSON.parse(fs.readFileSync('highscores.json'))
   fileData.push(winnerscore)
-  console.log(fileData)
   fileData.sort(sortByScore)
+  console.log(fileData)
   fs.writeFileSync('highscores.json', JSON.stringify(fileData));
 })
 

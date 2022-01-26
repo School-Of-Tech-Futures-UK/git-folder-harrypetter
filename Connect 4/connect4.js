@@ -2,18 +2,17 @@
 /* eslint-disable eqeqeq */
 /* eslint-disable prefer-const */
 /* eslint-disable camelcase */
-let turn = 0
-let player1 = 'red'
-let score = 0
-let receivedData = []
-let red_name = 'Anonymous (Red)'
-let yellow_name = 'Anonymous (Yellow)'
-let win_indicator = 0 //1 if red win, 2 if yellow win, 3 if nobody win, 0 if still playing
 
-
-
-
-let grid = [
+//Global Variable Object
+let global = {
+turn : 0,
+player : 'red',
+score : 0,
+receivedData : [],
+red_name : 'Anonymous (Red)',
+yellow_name : 'Anonymous (Yellow)',
+win_indicator : 0, //1 if red win, 2 if yellow win, 3 if nobody win, 0 if still playing
+grid : [
   [null, null, null, null, null, null, null],
   [null, null, null, null, null, null, null],
   [null, null, null, null, null, null, null],
@@ -21,61 +20,56 @@ let grid = [
   [null, null, null, null, null, null, null],
   [null, null, null, null, null, null, null]
 ]
-
-const takeNames = () => {
-  red_name = document.getElementById('rname').value + ' (Red)'
-  yellow_name = document.getElementById('yname').value + ' (Yellow)'
 }
 
+//START OF DIRTY FUNCTIONS---------------------------------------------------------------------------------------------------------------------------
 
 const takeTurn = (e) => {
   const id = e.target.id // rowX-colY
   const colNum = id[8]
-  const lowestAvailableRow = getLowestAvailableRowInColumn(colNum, grid)
+  const lowestAvailableRow = getLowestAvailableRowInColumn(colNum, global.grid)
  
-  if (lowestAvailableRow !== null && lowestAvailableRow >= 0 && win_indicator === 0) {
-    turn++
-    score = 42 - turn
-    if (turn < 42) {
-      if (player1 === 'red') {
-        grid[lowestAvailableRow][colNum] = 'red'
+  if (lowestAvailableRow !== null && lowestAvailableRow >= 0 && global.win_indicator === 0) {
+    global.turn++
+    global.score = 42 - global.turn
+    if (global.turn < 42) {
+      if (global.player === 'red') {
+        global.grid[lowestAvailableRow][colNum] = 'red'
         drawBoard(lowestAvailableRow, colNum)
-        player1 = 'yellow'
+        global.player = 'yellow'
       } else {
-        grid[lowestAvailableRow][colNum] = 'yellow'
+        global.grid[lowestAvailableRow][colNum] = 'yellow'
         drawBoard(lowestAvailableRow, colNum)
-        player1 = 'red'
+        global.player = 'red'
       }
     } 
     else {
-      grid[lowestAvailableRow][colNum] = 'yellow'
+      global.grid[lowestAvailableRow][colNum] = 'yellow'
       drawBoard(lowestAvailableRow, colNum)
-      player1 = 'red'
+      global.player = 'red'
       winnerMessage(3)
     }
     let winMatrix = [
-    checkRow(win_indicator),
-    checkColumn(win_indicator),
-    checkDiagonal1(win_indicator),
-    checkDiagonal2(win_indicator)]
+    checkRow(global.grid),
+    checkColumn(global.grid),
+    checkDiagonal1(global.grid),
+    checkDiagonal2(global.grid)]
     for (let i in winMatrix){
       if (winMatrix[i]){
-        win_indicator = winMatrix[i]
-        upload(winnerMessage(win_indicator), score)
+        global.win_indicator = winMatrix[i]
+        upload(winnerMessage(global.win_indicator), global.score)
         download()
-        setTimeout(() => {printHighScores()}, 200)
+        let highscoreboard = document.getElementById('highscore')
+        setTimeout(() => {printHighScores(highscoreboard, global.receivedData)}, 200)
       }
     }
   
   }
 }
 
-const getLowestAvailableRowInColumn = (columnNumber, grid) => {
-  for (let i = 5; i >= 0; i--) {
-    if (grid[i][columnNumber] === null) {
-      return i
-    }
-  }
+const takeNames = () => {
+  global.red_name = document.getElementById('rname').value + ' (Red)'
+  global.yellow_name = document.getElementById('yname').value + ' (Yellow)'
 }
 
 const upload = (winner_name, score) => {
@@ -99,93 +93,26 @@ const upload = (winner_name, score) => {
 const download = async () => {
   const resp = await fetch('http://localhost:3000/highscore')
   const json = await resp.json()
-  receivedData = json
+  global.receivedData = json
 }
 
-const checkRow = (data) => {
-  for (let i = 0; i < 6; i++) {
-    for (let j = 0; j < 7; j++) {
-      if (grid[i][j] == grid[i][j + 1] &&
-          grid[i][j] == grid[i][j + 2] &&
-          grid[i][j] == grid[i][j + 3]) {
-        if (grid[i][j] == 'red') {
-          return data = 1
-        }
-        if (grid[i][j] == 'yellow') {
-          return data = 2
-        }
-      }
-    }
-  }
-}
-
-const checkColumn = (data) => {
-  for (let i = 0; i < 3; i++) {
-    for (let j = 0; j < 7; j++) {
-      if (grid[i][j] == grid[i + 1][j] &&
-          grid[i][j] == grid[i + 2][j] &&
-          grid[i][j] == grid[i + 3][j]) {
-        if (grid[i][j] == 'red') {
-          return data = 1
-        }
-        if (grid[i][j] == 'yellow') {
-          return data = 2
-        }
-      }
-    }
-  }
-}
-
-const checkDiagonal1 = (data) => {
-  for (let i = 0; i < 3; i++) {
-    for (let j = 0; j < 7; j++) {
-      if (grid[i][j] == grid[i + 1][j + 1] &&
-          grid[i][j] == grid[i + 2][j + 2] &&
-          grid[i][j] == grid[i + 3][j + 3]) {
-        if (grid[i][j] == 'red') {
-          return data = 1
-        }
-        if (grid[i][j] == 'yellow') {
-          return data = 2
-        }
-      }
-    }
-  }
-}
-
-const checkDiagonal2 = (data) => {
-  for (let i = 0; i < 3; i++) {
-    for (let j = 7; j > 2; j--) {
-      if (grid[i][j] == grid[i + 1][j - 1] &&
-          grid[i][j] == grid[i + 2][j - 2] &&
-          grid[i][j] == grid[i + 3][j - 3]) {
-        if (grid[i][j] == 'red') {
-          return data = 1
-        }
-        if (grid[i][j] == 'yellow') {
-          return data = 2
-        }
-      }
-    }
-  }
-}
 
 const winnerMessage = (win_indicator) => {
   if (win_indicator == 1) {
     const hiddenText = document.getElementById('winner-display')
     hiddenText.style.display = 'block'
     hiddenText.style.backgroundColor = 'red'
-    hiddenText.textContent = `The winner is ${red_name}, scoring ${score} points!`
+    hiddenText.textContent = `The winner is ${global.red_name}, scoring ${global.score} points!`
     hiddenText.style.color = 'white'
-    return red_name
+    return global.red_name
 
   } else if (win_indicator == 2) {
     const hiddenText = document.getElementById('winner-display')
     hiddenText.style.display = 'block'
     hiddenText.style.backgroundColor = 'yellow'
-    hiddenText.textContent = `The winner is ${yellow_name}, scoring ${score} points!`
+    hiddenText.textContent = `The winner is ${global.yellow_name}, scoring ${global.score} points!`
     hiddenText.style.color = 'black'
-    return yellow_name
+    return global.yellow_name
     
 
   } else if (win_indicator == 3) {
@@ -204,26 +131,106 @@ const winnerMessage = (win_indicator) => {
 }
 
 const drawBoard = (lowestAvailableRow, colNum) => {
-  if (grid[lowestAvailableRow][colNum] == 'red') {
+  if (global.grid[lowestAvailableRow][colNum] == 'red') {
     document.getElementById(`row${lowestAvailableRow}-col${colNum}`).style.backgroundColor = 'red'
-  } else if (grid[lowestAvailableRow][colNum ] == 'yellow') {
+  } else if (global.grid[lowestAvailableRow][colNum ] == 'yellow') {
     document.getElementById(`row${lowestAvailableRow }-col${colNum}`).style.backgroundColor = 'yellow'
   }
 }
 
-const printHighScores = () => {
-  let highscoreboard = document.getElementById('highscore')
+const printHighScores = (highscoreboard, receivedData) => {
   highscoreboard.innerHTML = ''
   highscoreboard.style.display = 'block'
-  for (let i = 0; i < receivedData.length; i++) {
+  for (let i in receivedData) {
     if (i < 10) {
       highscoreboard.innerHTML += '<p>' + receivedData[i].Username + ' : ' + receivedData[i].Score + '</p>'
     }
   }
 }
 
+//END OF DIRTY FUNCTIONS---------------------------------------------------------------------------------------------------------------------------
+//-------------------------------------------------------------------------------------------------------------------------------------------------
+//START OF PURE FUNCTIONS--------------------------------------------------------------------------------------------------------------------------
+
+
+const getLowestAvailableRowInColumn = (columnNumber, grid) => {
+  for (let i = 5; i >= 0; i--) {
+    if (grid[i][columnNumber] === null) {
+      return i
+    }
+  }
+}
+
+const checkRow = (grid) => {
+  for (let i = 0; i < 6; i++) {
+    for (let j = 0; j < 7; j++) {
+      if (grid[i][j] == grid[i][j + 1] &&
+          grid[i][j] == grid[i][j + 2] &&
+          grid[i][j] == grid[i][j + 3]) {
+        if (grid[i][j] == 'red') {
+          return 1
+        }
+        if (grid[i][j] == 'yellow') {
+          return 2
+        }
+      }
+    }
+  }
+}
+
+const checkColumn = (grid) => {
+  for (let i = 0; i < 3; i++) {
+    for (let j = 0; j < 7; j++) {
+      if (grid[i][j] == grid[i + 1][j] &&
+          grid[i][j] == grid[i + 2][j] &&
+          grid[i][j] == grid[i + 3][j]) {
+        if (grid[i][j] == 'red') {
+          return 1
+        }
+        if (grid[i][j] == 'yellow') {
+          return 2
+        }
+      }
+    }
+  }
+}
+
+const checkDiagonal1 = (grid) => {
+  for (let i = 0; i < 3; i++) {
+    for (let j = 0; j < 7; j++) {
+      if (grid[i][j] == grid[i + 1][j + 1] &&
+          grid[i][j] == grid[i + 2][j + 2] &&
+          grid[i][j] == grid[i + 3][j + 3]) {
+        if (grid[i][j] == 'red') {
+          return 1
+        }
+        if (grid[i][j] == 'yellow') {
+          return 2
+        }
+      }
+    }
+  }
+}
+
+const checkDiagonal2 = (grid) => {
+  for (let i = 0; i < 3; i++) {
+    for (let j = 7; j > 2; j--) {
+      if (grid[i][j] == grid[i + 1][j - 1] &&
+          grid[i][j] == grid[i + 2][j - 2] &&
+          grid[i][j] == grid[i + 3][j - 3]) {
+        if (grid[i][j] == 'red') {
+          return 1
+        }
+        if (grid[i][j] == 'yellow') {
+          return 2
+        }
+      }
+    }
+  }
+}
+
 const resetGame = () => {
-  grid = [
+  global.grid = [
     [null, null, null, null, null, null, null],
     [null, null, null, null, null, null, null],
     [null, null, null, null, null, null, null],
@@ -238,10 +245,10 @@ const resetGame = () => {
     }
   }
 
-  player1 = 'red'
-  turn = 0
-  win_indicator = 0
+  global.player = 'red'
+  global.turn = 0
+  global.win_indicator
   winnerMessage()
 }
 
-// module.exports = {lowestAvailableRow}
+//END OF PURE FUNCTIONS--------------------------------------------------------------------------------------------------------------------------
