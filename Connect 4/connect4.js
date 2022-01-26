@@ -24,7 +24,7 @@ grid : [
 
 //START OF DIRTY FUNCTIONS---------------------------------------------------------------------------------------------------------------------------
 
-const takeTurn = (e) => {
+const boardClick = (e) => {
   const id = e.target.id // rowX-colY
   const colNum = id[8]
   const lowestAvailableRow = getLowestAvailableRowInColumn(colNum, global.grid)
@@ -34,13 +34,13 @@ const takeTurn = (e) => {
     global.score = 42 - global.turn
     if (global.turn < 42) {
       if (global.player === 'red') {
-        global.grid[lowestAvailableRow][colNum] = 'red'
+        global.grid[lowestAvailableRow][colNum] = global.player
         drawBoard(lowestAvailableRow, colNum)
-        global.player = 'yellow'
+        global.player = takeTurn(global.player)
       } else {
-        global.grid[lowestAvailableRow][colNum] = 'yellow'
+        global.grid[lowestAvailableRow][colNum] = global.player
         drawBoard(lowestAvailableRow, colNum)
-        global.player = 'red'
+        global.player = takeTurn(global.player)
       }
     } 
     else {
@@ -161,9 +161,18 @@ const getLowestAvailableRowInColumn = (columnNumber, grid) => {
   }
 }
 
+const takeTurn = (colour) => {
+  if (colour === 'red'){
+    return 'yellow'
+  }
+  if (colour === 'yellow'){
+    return 'red'
+  }
+}
+
 const checkRow = (grid) => {
   for (let i = 0; i < 6; i++) {
-    for (let j = 0; j < 7; j++) {
+    for (let j = 0; j < 4; j++) {
       if (grid[i][j] == grid[i][j + 1] &&
           grid[i][j] == grid[i][j + 2] &&
           grid[i][j] == grid[i][j + 3]) {
@@ -197,7 +206,7 @@ const checkColumn = (grid) => {
 
 const checkDiagonal1 = (grid) => {
   for (let i = 0; i < 3; i++) {
-    for (let j = 0; j < 7; j++) {
+    for (let j = 0; j < 4; j++) {
       if (grid[i][j] == grid[i + 1][j + 1] &&
           grid[i][j] == grid[i + 2][j + 2] &&
           grid[i][j] == grid[i + 3][j + 3]) {
@@ -214,7 +223,7 @@ const checkDiagonal1 = (grid) => {
 
 const checkDiagonal2 = (grid) => {
   for (let i = 0; i < 3; i++) {
-    for (let j = 7; j > 2; j--) {
+    for (let j = 6; j > 2; j--) {
       if (grid[i][j] == grid[i + 1][j - 1] &&
           grid[i][j] == grid[i + 2][j - 2] &&
           grid[i][j] == grid[i + 3][j - 3]) {
@@ -230,6 +239,9 @@ const checkDiagonal2 = (grid) => {
 }
 
 const resetGame = () => {
+  
+  // const wipe = global.grid.map((element) => null) 
+  // global.grid = wipe
   global.grid = [
     [null, null, null, null, null, null, null],
     [null, null, null, null, null, null, null],
@@ -253,9 +265,12 @@ const resetGame = () => {
 
 // END OF PURE FUNCTIONS--------------------------------------------------------------------------------------------------------------------------
 
+
+// Export Modules (Comment out for testing)
 module.exports = { 
   getLowestAvailableRowInColumn,
   checkRow,
+  takeTurn,
   checkColumn,
   checkDiagonal1,
   checkDiagonal2
