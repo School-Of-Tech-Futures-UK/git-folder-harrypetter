@@ -11,7 +11,7 @@ score : 0,
 receivedData : [],
 red_name : 'Anonymous (Red)',
 yellow_name : 'Anonymous (Yellow)',
-win_indicator : 0, //1 if red win, 2 if yellow win, 3 if nobody win, 0 if still playing
+win_indicator : 'still playing',
 grid : [
   [null, null, null, null, null, null, null],
   [null, null, null, null, null, null, null],
@@ -29,7 +29,7 @@ const takeTurn = (e) => {
   const colNum = id[8]
   const lowestAvailableRow = getLowestAvailableRowInColumn(colNum, global.grid)
  
-  if (lowestAvailableRow !== null && lowestAvailableRow >= 0 && global.win_indicator === 0) {
+  if (lowestAvailableRow !== null && lowestAvailableRow >= 0 && global.win_indicator === 'still playing') {
     global.turn++
     global.score = 42 - global.turn
     if (global.turn < 42) {
@@ -47,7 +47,7 @@ const takeTurn = (e) => {
       global.grid[lowestAvailableRow][colNum] = 'yellow'
       drawBoard(lowestAvailableRow, colNum)
       global.player = 'red'
-      winnerMessage(3)
+      winnerMessage('nobody')
     }
     let winMatrix = [
     checkRow(global.grid),
@@ -98,7 +98,7 @@ const download = async () => {
 
 
 const winnerMessage = (win_indicator) => {
-  if (win_indicator == 1) {
+  if (win_indicator == 'red') {
     const hiddenText = document.getElementById('winner-display')
     hiddenText.style.display = 'block'
     hiddenText.style.backgroundColor = 'red'
@@ -106,7 +106,7 @@ const winnerMessage = (win_indicator) => {
     hiddenText.style.color = 'white'
     return global.red_name
 
-  } else if (win_indicator == 2) {
+  } else if (win_indicator == 'yellow') {
     const hiddenText = document.getElementById('winner-display')
     hiddenText.style.display = 'block'
     hiddenText.style.backgroundColor = 'yellow'
@@ -115,7 +115,7 @@ const winnerMessage = (win_indicator) => {
     return global.yellow_name
     
 
-  } else if (win_indicator == 3) {
+  } else if (win_indicator == 'nobody') {
     const hiddenText = document.getElementById('winner-display')
     hiddenText.style.display = 'block'
     hiddenText.textContent = 'Nobody wins'
@@ -168,10 +168,10 @@ const checkRow = (grid) => {
           grid[i][j] == grid[i][j + 2] &&
           grid[i][j] == grid[i][j + 3]) {
         if (grid[i][j] == 'red') {
-          return 1
+          return 'red'
         }
         if (grid[i][j] == 'yellow') {
-          return 2
+          return 'yellow'
         }
       }
     }
@@ -185,10 +185,10 @@ const checkColumn = (grid) => {
           grid[i][j] == grid[i + 2][j] &&
           grid[i][j] == grid[i + 3][j]) {
         if (grid[i][j] == 'red') {
-          return 1
+          return 'red'
         }
         if (grid[i][j] == 'yellow') {
-          return 2
+          return 'yellow'
         }
       }
     }
@@ -202,10 +202,10 @@ const checkDiagonal1 = (grid) => {
           grid[i][j] == grid[i + 2][j + 2] &&
           grid[i][j] == grid[i + 3][j + 3]) {
         if (grid[i][j] == 'red') {
-          return 1
+          return 'red'
         }
         if (grid[i][j] == 'yellow') {
-          return 2
+          return 'yellow'
         }
       }
     }
@@ -219,10 +219,10 @@ const checkDiagonal2 = (grid) => {
           grid[i][j] == grid[i + 2][j - 2] &&
           grid[i][j] == grid[i + 3][j - 3]) {
         if (grid[i][j] == 'red') {
-          return 1
+          return 'red'
         }
         if (grid[i][j] == 'yellow') {
-          return 2
+          return 'yellow'
         }
       }
     }
@@ -247,8 +247,16 @@ const resetGame = () => {
 
   global.player = 'red'
   global.turn = 0
-  global.win_indicator
+  global.win_indicator = 'still playing'
   winnerMessage()
 }
 
-//END OF PURE FUNCTIONS--------------------------------------------------------------------------------------------------------------------------
+// END OF PURE FUNCTIONS--------------------------------------------------------------------------------------------------------------------------
+
+module.exports = { 
+  getLowestAvailableRowInColumn,
+  checkRow,
+  checkColumn,
+  checkDiagonal1,
+  checkDiagonal2
+};
