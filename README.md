@@ -1,4 +1,4 @@
-## Harrys Connect 4 Game
+# Harrys Connect 4 Game
 
 # Desctiption of key files:
 **connect4.js** - javascript code for game logic and DOM manipulation
