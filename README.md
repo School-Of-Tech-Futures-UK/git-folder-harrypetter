@@ -1,6 +1,6 @@
 # Harrys Connect 4 Game
 
-# Desctiption of key files:
+## Desctiption of key files:
 **connect4.js** - javascript code for game logic and DOM manipulation
 
 **connect4.test.js** - test file, exectute by typing: 
@@ -15,7 +15,7 @@ npx jest
 
 **server.js** - back end server program
 
-# Cloning instructions:
+## Cloning instructions:
 
 - Click code HTTPS
 - CLick copy link
@@ -29,7 +29,7 @@ cd ./filepath/filename/
 git clone <paste link>
 ```
 
-# How to run files
+## How to run files
 - In powershell in the correct directory, type 
 ```
 node server.js
@@ -39,7 +39,7 @@ node server.js
 - Game will run while node is running
 - To disable server, press CTRL + C in the powershell
 
-# Game rules
+## Game rules
 - Click columns to place coins in the lowest unnocupied slot in that column
 - Players take alternate turns
 - Red moves first
