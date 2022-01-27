@@ -5,13 +5,17 @@ Node_modules (folder), .eslintrc.js, connect4.js, connect4.test.jsm, GraphikBold
 
 # File description:
 **connect4.js** - javascript code for game logic and DOM manipulation
+
 **connect4.test.js** - test file, exectute by typing: 
-''' 
+``` 
 npx jest 
-'''
+```
 **highscores.json** - stores highscore list *(reduce to '[]' to reset list)*
+
 **index.html** - HTML file containing board structure
+
 **main.css** - Supporting CSS file to add styles to index.html
+
 **server.js** - back end server program
 
 # Cloning instructions:
