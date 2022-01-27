@@ -1,7 +1,17 @@
 ## Harrys Connect 4 Game
 
 # File Contents:
-Node_modules (folder), .eslintrc.js, connect4.js, connect4.test.jsm, GraphikBold.otf, highscores.json, index.html, main.css, package.json, package-lock.json, server.js
+Node_modules (folder),
+.eslintrc.js,
+connect4.js,
+connect4.test.jsm,
+GraphikBold.otf,
+highscores.json,
+index.html,
+main.css,
+package.json,
+package-lock.json,
+server.js
 
 # File description:
 **connect4.js** - javascript code for game logic and DOM manipulation
@@ -27,7 +37,7 @@ npx jest
 ```
 cd ./filepath/filename/
 ```
-- type 
+- type:
 ```
 git clone <paste link>
 ```
