@@ -35,7 +35,7 @@ git clone <paste link>
 node server.js
 ``` 
 *(Make sure you have node installed)*
-- Either open the HTML file or type 'localhost:3000:connect' into a browser
+- Either open the HTML file or type 'localhost:3000/connect' into a browser
 - Game will run while node is running
 - To disable server, press CTRL + C in the powershell
 
