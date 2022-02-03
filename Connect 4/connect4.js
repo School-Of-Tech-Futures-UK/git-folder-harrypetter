@@ -10,8 +10,8 @@ let global = {
   player: 'red',
   score: 0,
   receivedData: [],
-  red_name: 'Anonymous (Red)',
-  yellow_name: 'Anonymous (Yellow)',
+  red_name: 'Anon. (Red)',
+  yellow_name: 'Anon. (Yellow)',
   win_indicator: 'still playing',
   X : 4,
   grid: [
@@ -76,13 +76,21 @@ const boardClick = (e) => {
 
 // Takes names of players and updates global name variables
 const takeNames = () => {
-  global.red_name = document.getElementById('rname').value + ` (Red) [Connect ${global.X}]`
-  global.yellow_name = document.getElementById('yname').value + ` (Yellow) [Connect ${global.X}]`
+  global.red_name = document.getElementById('rname').value + ` (Red)`
+  global.yellow_name = document.getElementById('yname').value + ` (Yellow)`
 }
 
 const takeX = () => {
-  global.X = document.getElementById('xname').value
-  console.log(global.X)
+  if (document.getElementById('xname').value > 1 && document.getElementById('xname').value < 8){
+    global.X = document.getElementById('xname').value
+    console.log(global.X)
+    document.getElementById('header').innerHTML = `Connect ${global.X}`
+    document.getElementById('Xtext').innerHTML = `Playing Connect ${global.X}, change X?`
+
+  }
+  else {
+    document.getElementById('Xtext').innerHTML = `X must be an integer between 2 and 7`
+  }
 }
 
 // Fetch API for posting scores to the highscore board
@@ -116,18 +124,22 @@ const winnerMessage = (win_indicator, X) => {
   // If red wins, do some HTML and return red name as the winner
   if (win_indicator == 'red') {
     const hiddenText = document.getElementById('winner-display')
+    playAudio('win.mp3')
     hiddenText.style.display = 'block'
     hiddenText.style.backgroundColor = 'red'
-    hiddenText.textContent = `The winner is ${global.red_name}, scoring ${global.score} points!`
+    hiddenText.textContent = `The winner is ${global.red_name}, scoring ${global.score} points! [Connect ${X}]`
     hiddenText.style.color = 'white'
+    global.red_name += ` [${X}]`
     return global.red_name
   // If yellow wins, do some HTML and return yellow name as the winner
   } else if (win_indicator == 'yellow') {
     const hiddenText = document.getElementById('winner-display')
+    playAudio('win.mp3')
     hiddenText.style.display = 'block'
     hiddenText.style.backgroundColor = 'yellow'
-    hiddenText.textContent = `The winner is ${global.yellow_name}, scoring ${global.score} points!`
+    hiddenText.textContent = `The winner is ${global.yellow_name}, scoring ${global.score} points! [Connect ${X}]`
     hiddenText.style.color = 'black'
+    global.yellow_name += ` [${X}]`
     return global.yellow_name
     // If nobody wins, make a blue banner appear detailing tragic outcome
   } else if (win_indicator == 'nobody') {
@@ -149,9 +161,17 @@ const winnerMessage = (win_indicator, X) => {
 const drawBoard = (lowestAvailableRow, colNum, grid) => {
   if (grid[lowestAvailableRow][colNum] == 'red') {
     document.getElementById(`row${lowestAvailableRow}-col${colNum}`).style.backgroundColor = 'red'
+    document.getElementById(`row${lowestAvailableRow}-col${colNum}`).classList.add('fall')
+    playAudio('coin.mp3')
   } else if (grid[lowestAvailableRow][colNum] == 'yellow') {
     document.getElementById(`row${lowestAvailableRow}-col${colNum}`).style.backgroundColor = 'yellow'
+    document.getElementById(`row${lowestAvailableRow}-col${colNum}`).classList.add('fall')
+    playAudio('coin.mp3')
   }
+}
+
+const playAudio = (x) => {
+  new Audio(x).play()
 }
 
 // Print the highscores as a list that appears on completion of the game
