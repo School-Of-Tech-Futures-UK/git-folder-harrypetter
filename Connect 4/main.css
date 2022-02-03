@@ -84,9 +84,17 @@
 #yellowtext{
     -webkit-text-stroke: 0.9px black; /* width and color */
     font-family: "Graphik";
-
+    font-size: xx-large;
 
 }
+
+.xtext{
+    background-color: white;
+    color: black;
+    border-radius: 15px;
+    font-size: xx-large;
+}
+
 
 .names{
     font-weight: bold;
@@ -95,6 +103,15 @@
     border-radius: 5%;
     width: 420px;
     background-image: linear-gradient(to top left, rgb(195, 0, 255), rgb(38, 209, 252));
+}
+
+
+
+.connectX{
+    font-weight: bold;
+    color: white;
+    font-size:xx-large;
+    
 }
 
 body {
@@ -155,15 +172,3 @@ body {
 
    
 }
-
-/* 
-async function loadScores () {
-    const contents = await fs.readFile('./highscores.json', 'utf-8')
-    const data = JSON.parse(contents)
-    return data
-  }
-  
-  async function saveScores (scores) {
-    const contents = JSON.stringify(scores)
-    await fs.writeFile('./highscores.json', contents)
-  } */

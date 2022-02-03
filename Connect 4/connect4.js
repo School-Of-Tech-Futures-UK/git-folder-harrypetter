@@ -13,6 +13,7 @@ let global = {
   red_name: 'Anonymous (Red)',
   yellow_name: 'Anonymous (Yellow)',
   win_indicator: 'still playing',
+  X : 4,
   grid: [
     [null, null, null, null, null, null, null],
     [null, null, null, null, null, null, null],
@@ -29,6 +30,7 @@ let global = {
 // Called when column is clicked
 const boardClick = (e) => {
   const colNum = e.target.id[8]
+  //console.log(global.X)
   let valid = 1
   // Find the lowest row for the selected column
   const lowestAvailableRow = getLowestAvailableRowInColumn(colNum, global.grid)
@@ -38,7 +40,7 @@ const boardClick = (e) => {
     global.turn++
     global.score = 42 - global.turn
     // Cheeky console log
-    console.log(`Turn number ${global.turn}`)
+    //console.log(`Turn number ${global.turn}`)
     // If the game is not yet over, place piece, draw board and swap colour
     if (global.turn < 42) {
       global.grid = takeTurn(global.grid, lowestAvailableRow, colNum, global.player, global.win_indicator)
@@ -53,7 +55,7 @@ const boardClick = (e) => {
       winnerMessage('nobody')
     }
     // Calls all checkWinner functions into a matrix which then contains nulls unless one or more conditions are satisfied
-    let winMatrix = [checkRow(global.grid), checkColumn(global.grid), checkDiagonal1(global.grid), checkDiagonal2(global.grid)]
+    let winMatrix = [checkRow(global.grid, global.X), checkColumn(global.grid, global.X), checkDiagonal1(global.grid, global.X), checkDiagonal2(global.grid, global.X)]
 
     // loops through matrix to see if anybody won
     for (let i in winMatrix) {
@@ -76,6 +78,11 @@ const boardClick = (e) => {
 const takeNames = () => {
   global.red_name = document.getElementById('rname').value + ' (Red)'
   global.yellow_name = document.getElementById('yname').value + ' (Yellow)'
+}
+
+const takeX = () => {
+  global.X = document.getElementById('xname').value
+  console.log(global.X)
 }
 
 // Fetch API for posting scores to the highscore board
@@ -210,53 +217,88 @@ const swapColour = (colour) => {
 }
 
 // Loop through rows to search for winner
-const checkRow = (grid) => {
+
+const checkRow = (grid, X) => {
+  console.log(`Currently playing Connect ${X}`)
   for (let i = 0; i < 6; i++) {
-    for (let j = 0; j < 4; j++) {
-      if (grid[i][j] == grid[i][j + 1] &&
-          grid[i][j] == grid[i][j + 2] &&
-          grid[i][j] == grid[i][j + 3]) {
-        if (grid[i][j] == 'red') {
-          return 'red'
+    for (let j = 0; j < (8 - X); j++) {
+      for (let search = 1; search < (X); search++) {
+        if(grid[i][j + search] !== 'red') {
+          break
         }
-        if (grid[i][j] == 'yellow') {
-          return 'yellow'
+        if(grid[i][j] === grid[i][j+search] && grid[i][j] === 'red') {
+          if(search === (X - 1)) {
+            return 'red'
+          }
+        }
+      }
+      for (let search = 1; search < (X); search++) {
+        if(grid[i][j + search] !== 'yellow') {
+          break
+        }
+        if(grid[i][j] === grid[i][j+search] && grid[i][j] === 'yellow') {
+          if(search === (X - 1)) {
+            return 'yellow'
+          }
         }
       }
     }
   }
 }
 
+
 // Loop through columns to check for winner
-const checkColumn = (grid) => {
-  for (let i = 0; i < 3; i++) {
+
+const checkColumn = (grid, X) => {
+  for (let i = 0; i < (7 - X); i++) {
     for (let j = 0; j < 7; j++) {
-      if (grid[i][j] == grid[i + 1][j] &&
-          grid[i][j] == grid[i + 2][j] &&
-          grid[i][j] == grid[i + 3][j]) {
-        if (grid[i][j] == 'red') {
-          return 'red'
+      for (let search = 1; search < (X); search++) {
+        if(grid[i + search][j] !== 'red') {
+          break
         }
-        if (grid[i][j] == 'yellow') {
-          return 'yellow'
+        if(grid[i][j] === grid[i + search][j] && grid[i][j] === 'red') {
+          if(search === (X - 1)) {
+            return 'red'
+          }
         }
       }
-    }
+      for (let search = 1; search < (X); search++) {
+        if(grid[i + search][j] !== 'yellow') {
+          break
+        }
+        if(grid[i][j] === grid[i + search][j] && grid[i][j] === 'yellow') {
+          if(search === (X - 1)) {
+            return 'yellow'
+          }
+        }
+      }
+    }  
   }
 }
 
 // Loop through diagonals to check for winner
-const checkDiagonal1 = (grid) => {
-  for (let i = 0; i < 3; i++) {
-    for (let j = 0; j < 4; j++) {
-      if (grid[i][j] == grid[i + 1][j + 1] &&
-          grid[i][j] == grid[i + 2][j + 2] &&
-          grid[i][j] == grid[i + 3][j + 3]) {
-        if (grid[i][j] == 'red') {
-          return 'red'
+
+const checkDiagonal1 = (grid, X) => {
+  for (let i = 0; i < (7 - X); i++) {
+    for (let j = 0; j < (8 - X); j++) {
+      for (let search = 1; search < (X); search++) {
+        if(grid[i + search][j + search] !== 'red') {
+          break
         }
-        if (grid[i][j] == 'yellow') {
-          return 'yellow'
+        if(grid[i][j] === grid[i + search][j + search] && grid[i][j] === 'red') {
+          if(search === (X - 1)) {
+            return 'red'
+          }
+        }
+      }
+      for (let search = 1; search < (X); search++) {
+        if(grid[i + search][j + search] !== 'yellow') {
+          break
+        }
+        if(grid[i][j] === grid[i + search][j + search] && grid[i][j] === 'yellow') {
+          if(search === (X - 1)) {
+            return 'yellow'
+          }
         }
       }
     }
@@ -264,17 +306,28 @@ const checkDiagonal1 = (grid) => {
 }
 
 // Loop through counter-diagonals to check for winner
-const checkDiagonal2 = (grid) => {
-  for (let i = 0; i < 3; i++) {
-    for (let j = 6; j > 2; j--) {
-      if (grid[i][j] == grid[i + 1][j - 1] &&
-          grid[i][j] == grid[i + 2][j - 2] &&
-          grid[i][j] == grid[i + 3][j - 3]) {
-        if (grid[i][j] == 'red') {
-          return 'red'
+
+const checkDiagonal2 = (grid, X) => {
+  for (let i = 0; i < (7 - X); i++) {
+    for (let j = 6; j > (6 - X); j--) {
+      for (let search = 1; search < (X); search++) {
+        if(grid[i + search][j - search] !== 'red') {
+          break
         }
-        if (grid[i][j] == 'yellow') {
-          return 'yellow'
+        if(grid[i][j] === grid[i + search][j - search] && grid[i][j] === 'red') {
+          if(search === (X - 1)) {
+            return 'red'
+          }
+        }
+      }
+      for (let search = 1; search < (X); search++) {
+        if(grid[i + search][j - search] !== 'yellow') {
+          break
+        }
+        if(grid[i][j] === grid[i + search][j - search] && grid[i][j] === 'yellow') {
+          if(search === (X - 1)) {
+            return 'yellow'
+          }
         }
       }
     }
@@ -284,12 +337,84 @@ const checkDiagonal2 = (grid) => {
 
 // Export Modules (Comment out for testing)
 
-module.exports = {
-  getLowestAvailableRowInColumn,
-  checkRow,
-  takeTurn,
-  swapColour,
-  checkColumn,
-  checkDiagonal1,
-  checkDiagonal2
-}
+// module.exports = {
+//   getLowestAvailableRowInColumn,
+//   checkRow,
+//   takeTurn,
+//   swapColour,
+//   checkColumn,
+//   checkDiagonal1,
+//   checkDiagonal2
+// }
+
+
+
+//-----------------------------OLD CHECKWINNER CODE (CONNECT 4 ONLY)
+
+// const checkRow = (grid) => {
+//   for (let i = 0; i < 6; i++) {
+//     for (let j = 0; j < 4; j++) {
+//       if (grid[i][j] == grid[i][j + 1] &&
+//           grid[i][j] == grid[i][j + 2] &&
+//           grid[i][j] == grid[i][j + 3]) {
+//         if (grid[i][j] == 'red') {
+//           return 'red'
+//         }
+//         if (grid[i][j] == 'yellow') {
+//           return 'yellow'
+//         }
+//       }
+//     }
+//   }
+// }
+
+// const checkColumn = (grid) => {
+//   for (let i = 0; i < 3; i++) {
+//     for (let j = 0; j < 7; j++) {
+//       if (grid[i][j] == grid[i + 1][j] &&
+//           grid[i][j] == grid[i + 2][j] &&
+//           grid[i][j] == grid[i + 3][j]) {
+//         if (grid[i][j] == 'red') {
+//           return 'red'
+//         }
+//         if (grid[i][j] == 'yellow') {
+//           return 'yellow'
+//         }
+//       }
+//     }
+//   }
+// }
+
+// const checkDiagonal1 = (grid) => {
+//   for (let i = 0; i < 3; i++) {
+//     for (let j = 0; j < 4; j++) {
+//       if (grid[i][j] == grid[i + 1][j + 1] &&
+//           grid[i][j] == grid[i + 2][j + 2] &&
+//           grid[i][j] == grid[i + 3][j + 3]) {
+//         if (grid[i][j] == 'red') {
+//           return 'red'
+//         }
+//         if (grid[i][j] == 'yellow') {
+//           return 'yellow'
+//         }
+//       }
+//     }
+//   }
+// }
+
+// const checkDiagonal2 = (grid) => {
+//   for (let i = 0; i < 3; i++) {
+//     for (let j = 6; j > 2; j--) {
+//       if (grid[i][j] == grid[i + 1][j - 1] &&
+//           grid[i][j] == grid[i + 2][j - 2] &&
+//           grid[i][j] == grid[i + 3][j - 3]) {
+//         if (grid[i][j] == 'red') {
+//           return 'red'
+//         }
+//         if (grid[i][j] == 'yellow') {
+//           return 'yellow'
+//         }
+//       }
+//     }
+//   }
+// }

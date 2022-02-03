@@ -1,4 +1,4 @@
-
+<!-- <!DOCTYPE html> -->
 <html>
 
 <head>
@@ -12,30 +12,35 @@
 </head>
 
 <body>
-    </br></br>
-        <h1 id="header"> Connect 4</h1>
-        </br></br>
-        <script src="connect4.js" crossorigin="anonymous"></script>
+    </br></br><h1 id="header"> Connect X</h1>
+    <script src="connect4.js" crossorigin="anonymous"></script>
         <p id="winner-display" style ="display: none;"></p>
+        <div class = "connectX">
+            
+            <label id = "yellowtext">Enter value for X</label></br>
+            <input class = "xtext" type="text" id="xname"> <button id = "namesbutton" onClick= "takeX();">Submit</button>
+        </div></br>
+         <!--DIV CONTAINING ALL UI-->
         <div class = "parent">
-            <div class = "LHS">
+        
+            <div class = "LHS"> <!--DIV CONTAINING LHS UI-->
                 <div class = "names">
                     <label id = "redtext">Enter red name:</label><br>
                     <input class = "textboxred" type="text" id="rname"><br>
                     <label id = "yellowtext">Enter yellow name:</label><br>
                     <input  class = "textboxyellow" type="text" id="yname"><br>
                     <button id = "namesbutton" onClick= "takeNames();">Submit</button>
-                    
-                    <div class = "HighscoreBoard">
+                
 
-                </div>
-                <p style="font-family: Graphik;">Top 10 Highscores:</p>
-                <p id = "highscore"style ="display: none;"></p>
+                    <div class = "HighscoreBoard">
+                        <p style="font-family: Graphik;">Top 10 Highscores:</p>
+                        <p id = "highscore"style ="display: none;"></p>
+                    </div>
                 </div>
             </div>
 
-            <div class = "RHS">
-            </br>
+            <div class = "RHS"> <!--DIV CONTAINING RHS UI-->
+            
             <div id="connect4Board">
                 <div class="row">
                     <div class="col" id="row0-col0" onClick="boardClick(event);"> </div>
@@ -91,13 +96,10 @@
                     <div class="col" id="row5-col5" onClick="boardClick(event);">  </div>
                     <div class="col" id="row5-col6" onClick="boardClick(event);">  </div>
                 </div>
-                    </br></br><button id="reset-button" onClick = "resetGame();">Reset</button>
+                    </br></br><button id="reset-button" onClick = "resetGame();">Reset Game</button>
                 </div>
-        </br></br>
         </div>
     </div>
-
-
 </body>
 
 
