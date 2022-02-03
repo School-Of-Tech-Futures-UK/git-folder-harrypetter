@@ -40,9 +40,11 @@ node server.js
 - To disable server, press CTRL + C in the powershell
 
 ## Game rules
+- This is a special variant of connect 4 - Connect X!
+    - Enter a value for X to change the mechanics of the game 
 - Click columns to place coins in the lowest unnocupied slot in that column
 - Players take alternate turns
 - Red moves first
 - Enter player names and click submit at any point in the game if you would like to feature on the highscore board!
-- The winner is the first person to place four adjacent coins either horizontally, vertcially or diagonally
+- The winner is the first person to place four (or X) adjacent coins either horizontally, vertcially or diagonally
 - Press reset to submit highscores and start over

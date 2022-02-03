@@ -63,7 +63,7 @@ const boardClick = (e) => {
         // if somebody won, set win_indicator to the winning colour
         global.win_indicator = winMatrix[i]
         // send name, colour and score to server
-        upload(winnerMessage(global.win_indicator), global.score)
+        upload(winnerMessage(global.win_indicator, global.X), global.score)
         // retrieve high score board
         download()
         // call function after brief delay to print the highscore board
@@ -76,8 +76,8 @@ const boardClick = (e) => {
 
 // Takes names of players and updates global name variables
 const takeNames = () => {
-  global.red_name = document.getElementById('rname').value + ' (Red)'
-  global.yellow_name = document.getElementById('yname').value + ' (Yellow)'
+  global.red_name = document.getElementById('rname').value + ` (Red) [Connect ${global.X}]`
+  global.yellow_name = document.getElementById('yname').value + ` (Yellow) [Connect ${global.X}]`
 }
 
 const takeX = () => {
@@ -112,7 +112,7 @@ const download = async () => {
 }
 
 // Function to display winner message on HTML
-const winnerMessage = (win_indicator) => {
+const winnerMessage = (win_indicator, X) => {
   // If red wins, do some HTML and return red name as the winner
   if (win_indicator == 'red') {
     const hiddenText = document.getElementById('winner-display')
