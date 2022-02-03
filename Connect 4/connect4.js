@@ -10,8 +10,8 @@ let global = {
   player: 'red',
   score: 0,
   receivedData: [],
-  red_name: 'Anon. (Red)',
-  yellow_name: 'Anon. (Yellow)',
+  red_name: 'Anonymous (Red)',
+  yellow_name: 'Anonymous (Yellow)',
   win_indicator: 'still playing',
   X : 4,
   grid: [
@@ -63,7 +63,7 @@ const boardClick = (e) => {
         // if somebody won, set win_indicator to the winning colour
         global.win_indicator = winMatrix[i]
         // send name, colour and score to server
-        upload(winnerMessage(global.win_indicator, global.X), global.score)
+        upload(winnerMessage(global.win_indicator, global.X), global.score, global.X)
         // retrieve high score board
         download()
         // call function after brief delay to print the highscore board
@@ -94,13 +94,13 @@ const takeX = () => {
 }
 
 // Fetch API for posting scores to the highscore board
-const upload = (winner_name, score) => {
+const upload = (winner_name, score, X) => {
   fetch('http://localhost:3000/highscore', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json'
     },
-    body: JSON.stringify({ Username: winner_name, Score: score })
+    body: JSON.stringify({ Username: winner_name, Score: score, X: X })
   })
     .then(function (response) {
       if (response.ok) {
@@ -129,7 +129,6 @@ const winnerMessage = (win_indicator, X) => {
     hiddenText.style.backgroundColor = 'red'
     hiddenText.textContent = `The winner is ${global.red_name}, scoring ${global.score} points! [Connect ${X}]`
     hiddenText.style.color = 'white'
-    global.red_name += ` [${X}]`
     return global.red_name
   // If yellow wins, do some HTML and return yellow name as the winner
   } else if (win_indicator == 'yellow') {
@@ -139,7 +138,6 @@ const winnerMessage = (win_indicator, X) => {
     hiddenText.style.backgroundColor = 'yellow'
     hiddenText.textContent = `The winner is ${global.yellow_name}, scoring ${global.score} points! [Connect ${X}]`
     hiddenText.style.color = 'black'
-    global.yellow_name += ` [${X}]`
     return global.yellow_name
     // If nobody wins, make a blue banner appear detailing tragic outcome
   } else if (win_indicator == 'nobody') {
@@ -181,7 +179,7 @@ const printHighScores = (highscoreboard, receivedData) => {
   highscoreboard.style.display = 'block'
   for (let i in receivedData) {
     if (i < 10) {
-      highscoreboard.innerHTML += '<p>' + receivedData[i].Username + ' : ' + receivedData[i].Score + '</p>'
+      highscoreboard.innerHTML += '<p>' + receivedData[i].Username + ` [C${receivedData[i].X}]`+ ' : ' + receivedData[i].Score  + '</p>'
     }
   }
 }
