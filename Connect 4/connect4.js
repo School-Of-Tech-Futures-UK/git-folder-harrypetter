@@ -13,7 +13,7 @@ let global = {
   red_name: 'Anonymous (Red)',
   yellow_name: 'Anonymous (Yellow)',
   win_indicator: 'still playing',
-  X : 4,
+  X: 4,
   grid: [
     [null, null, null, null, null, null, null],
     [null, null, null, null, null, null, null],
@@ -30,25 +30,19 @@ let global = {
 // Called when column is clicked
 const boardClick = (e) => {
   const colNum = e.target.id[8]
-  //console.log(global.X)
+  // console.log(global.X)
   let valid = 1
-  // Find the lowest row for the selected column
-  const lowestAvailableRow = getLowestAvailableRowInColumn(colNum, global.grid)
-  // If there is still a row that can be played AND nobody has won yet
-  if (lowestAvailableRow >= 0 && global.win_indicator === 'still playing') {
-    // Increment turn and calculate score
-    global.turn++
+  const lowestAvailableRow = getLowestAvailableRowInColumn(colNum, global.grid) // Find the lowest row for the selected column
+
+  if (lowestAvailableRow >= 0 && global.win_indicator === 'still playing') { // If there is still a row that can be played AND nobody has won yet
+    global.turn++ // Increment turn and calculate score
     global.score = 42 - global.turn
-    // Cheeky console log
-    //console.log(`Turn number ${global.turn}`)
-    // If the game is not yet over, place piece, draw board and swap colour
-    if (global.turn < 42) {
+    if (global.turn < 42) { // If the game is not yet over, place piece, draw board and swap colour
       global.grid = takeTurn(global.grid, lowestAvailableRow, colNum, global.player, global.win_indicator)
       drawBoard(lowestAvailableRow, colNum, global.grid)
       global.player = swapColour(global.player)
     }
-    // Same as above but if game is over -> cues sad blue sign
-    else {
+    else { // Same as above but if game is over -> cues sad blue sign
       global.grid[lowestAvailableRow][colNum] = 'yellow'
       drawBoard(lowestAvailableRow, colNum, global.grid)
       global.player = swapColour(global.player)
@@ -56,18 +50,12 @@ const boardClick = (e) => {
     }
     // Calls all checkWinner functions into a matrix which then contains nulls unless one or more conditions are satisfied
     let winMatrix = [checkRow(global.grid, global.X), checkColumn(global.grid, global.X), checkDiagonal1(global.grid, global.X), checkDiagonal2(global.grid, global.X)]
-
-    // loops through matrix to see if anybody won
-    for (let i in winMatrix) {
+    for (let i in winMatrix) { // loops through matrix to see if anybody won
       if (winMatrix[i]) {
-        // if somebody won, set win_indicator to the winning colour
-        global.win_indicator = winMatrix[i]
-        // send name, colour and score to server
-        upload(winnerMessage(global.win_indicator, global.X), global.score, global.X)
-        // retrieve high score board
-        download()
-        // call function after brief delay to print the highscore board
-        let highscoreboard = document.getElementById('highscore')
+        global.win_indicator = winMatrix[i] // if somebody won, set win_indicator to the winning colour
+        upload(winnerMessage(global.win_indicator, global.X), global.score, global.X) // send name, colour and score to server
+        download() // retrieve high score board
+        let highscoreboard = document.getElementById('highscore') // call function after brief delay to print the highscore board
         setTimeout(() => { printHighScores(highscoreboard, global.receivedData) }, 200)
       }
     }
@@ -76,20 +64,20 @@ const boardClick = (e) => {
 
 // Takes names of players and updates global name variables
 const takeNames = () => {
-  global.red_name = document.getElementById('rname').value + ` (Red)`
-  global.yellow_name = document.getElementById('yname').value + ` (Yellow)`
+  global.red_name = document.getElementById('rname').value + ' (Red)'
+  global.yellow_name = document.getElementById('yname').value + ' (Yellow)'
 }
 
+// Handles changing of value for X
 const takeX = () => {
-  if (document.getElementById('xname').value > 1 && document.getElementById('xname').value < 8){
+  if (document.getElementById('xname').value > 1 && document.getElementById('xname').value < 8) {
     global.X = document.getElementById('xname').value
     console.log(global.X)
     document.getElementById('header').innerHTML = `Connect ${global.X}`
     document.getElementById('Xtext').innerHTML = `Playing Connect ${global.X}, change X?`
-
   }
   else {
-    document.getElementById('Xtext').innerHTML = `X must be an integer between 2 and 7`
+    document.getElementById('Xtext').innerHTML = 'X must be an integer between 2 and 7'
   }
 }
 
@@ -168,10 +156,6 @@ const drawBoard = (lowestAvailableRow, colNum, grid) => {
   }
 }
 
-const playAudio = (x) => {
-  new Audio(x).play()
-}
-
 // Print the highscores as a list that appears on completion of the game
 // Only displays the top 10 as per user story
 const printHighScores = (highscoreboard, receivedData) => {
@@ -179,7 +163,7 @@ const printHighScores = (highscoreboard, receivedData) => {
   highscoreboard.style.display = 'block'
   for (let i in receivedData) {
     if (i < 10) {
-      highscoreboard.innerHTML += '<p>' + receivedData[i].Username + ` [C${receivedData[i].X}]`+ ' : ' + receivedData[i].Score  + '</p>'
+      highscoreboard.innerHTML += '<p>' + receivedData[i].Username + ` [C${receivedData[i].X}]` + ' : ' + receivedData[i].Score + '</p>'
     }
   }
 }
@@ -214,6 +198,11 @@ const getLowestAvailableRowInColumn = (columnNumber, grid) => {
   }
 }
 
+// Takes audio signal and plays
+const playAudio = (x) => {
+  new Audio(x).play()
+}
+
 // Updates the state of the grid
 const takeTurn = (grid, lowestRow, column, colour, winner) => {
   if (winner != 'red' && winner != 'yellow') {
@@ -235,27 +224,26 @@ const swapColour = (colour) => {
 }
 
 // Loop through rows to search for winner
-
 const checkRow = (grid, X) => {
   console.log(`Currently playing Connect ${X}`)
   for (let i = 0; i < 6; i++) {
     for (let j = 0; j < (8 - X); j++) {
       for (let search = 1; search < (X); search++) {
-        if(grid[i][j + search] !== 'red') {
+        if (grid[i][j + search] !== 'red') {
           break
         }
-        if(grid[i][j] === grid[i][j+search] && grid[i][j] === 'red') {
-          if(search === (X - 1)) {
+        if (grid[i][j] === grid[i][j + search] && grid[i][j] === 'red') {
+          if (search === (X - 1)) {
             return 'red'
           }
         }
       }
       for (let search = 1; search < (X); search++) {
-        if(grid[i][j + search] !== 'yellow') {
+        if (grid[i][j + search] !== 'yellow') {
           break
         }
-        if(grid[i][j] === grid[i][j+search] && grid[i][j] === 'yellow') {
-          if(search === (X - 1)) {
+        if (grid[i][j] === grid[i][j + search] && grid[i][j] === 'yellow') {
+          if (search === (X - 1)) {
             return 'yellow'
           }
         }
@@ -264,57 +252,54 @@ const checkRow = (grid, X) => {
   }
 }
 
-
 // Loop through columns to check for winner
-
 const checkColumn = (grid, X) => {
   for (let i = 0; i < (7 - X); i++) {
     for (let j = 0; j < 7; j++) {
       for (let search = 1; search < (X); search++) {
-        if(grid[i + search][j] !== 'red') {
+        if (grid[i + search][j] !== 'red') {
           break
         }
-        if(grid[i][j] === grid[i + search][j] && grid[i][j] === 'red') {
-          if(search === (X - 1)) {
+        if (grid[i][j] === grid[i + search][j] && grid[i][j] === 'red') {
+          if (search === (X - 1)) {
             return 'red'
           }
         }
       }
       for (let search = 1; search < (X); search++) {
-        if(grid[i + search][j] !== 'yellow') {
+        if (grid[i + search][j] !== 'yellow') {
           break
         }
-        if(grid[i][j] === grid[i + search][j] && grid[i][j] === 'yellow') {
-          if(search === (X - 1)) {
+        if (grid[i][j] === grid[i + search][j] && grid[i][j] === 'yellow') {
+          if (search === (X - 1)) {
             return 'yellow'
           }
         }
       }
-    }  
+    }
   }
 }
 
 // Loop through diagonals to check for winner
-
 const checkDiagonal1 = (grid, X) => {
   for (let i = 0; i < (7 - X); i++) {
     for (let j = 0; j < (8 - X); j++) {
       for (let search = 1; search < (X); search++) {
-        if(grid[i + search][j + search] !== 'red') {
+        if (grid[i + search][j + search] !== 'red') {
           break
         }
-        if(grid[i][j] === grid[i + search][j + search] && grid[i][j] === 'red') {
-          if(search === (X - 1)) {
+        if (grid[i][j] === grid[i + search][j + search] && grid[i][j] === 'red') {
+          if (search === (X - 1)) {
             return 'red'
           }
         }
       }
       for (let search = 1; search < (X); search++) {
-        if(grid[i + search][j + search] !== 'yellow') {
+        if (grid[i + search][j + search] !== 'yellow') {
           break
         }
-        if(grid[i][j] === grid[i + search][j + search] && grid[i][j] === 'yellow') {
-          if(search === (X - 1)) {
+        if (grid[i][j] === grid[i + search][j + search] && grid[i][j] === 'yellow') {
+          if (search === (X - 1)) {
             return 'yellow'
           }
         }
@@ -324,26 +309,25 @@ const checkDiagonal1 = (grid, X) => {
 }
 
 // Loop through counter-diagonals to check for winner
-
 const checkDiagonal2 = (grid, X) => {
   for (let i = 0; i < (7 - X); i++) {
     for (let j = 6; j > (6 - X); j--) {
       for (let search = 1; search < (X); search++) {
-        if(grid[i + search][j - search] !== 'red') {
+        if (grid[i + search][j - search] !== 'red') {
           break
         }
-        if(grid[i][j] === grid[i + search][j - search] && grid[i][j] === 'red') {
-          if(search === (X - 1)) {
+        if (grid[i][j] === grid[i + search][j - search] && grid[i][j] === 'red') {
+          if (search === (X - 1)) {
             return 'red'
           }
         }
       }
       for (let search = 1; search < (X); search++) {
-        if(grid[i + search][j - search] !== 'yellow') {
+        if (grid[i + search][j - search] !== 'yellow') {
           break
         }
-        if(grid[i][j] === grid[i + search][j - search] && grid[i][j] === 'yellow') {
-          if(search === (X - 1)) {
+        if (grid[i][j] === grid[i + search][j - search] && grid[i][j] === 'yellow') {
+          if (search === (X - 1)) {
             return 'yellow'
           }
         }
@@ -352,87 +336,15 @@ const checkDiagonal2 = (grid, X) => {
   }
 }
 // END OF PURE FUNCTIONS--------------------------------------------------------------------------------------------------------------------------
-
 // Export Modules (Comment out for testing)
 
-// module.exports = {
-//   getLowestAvailableRowInColumn,
-//   checkRow,
-//   takeTurn,
-//   swapColour,
-//   checkColumn,
-//   checkDiagonal1,
-//   checkDiagonal2
-// }
-
-
-
-//-----------------------------OLD CHECKWINNER CODE (CONNECT 4 ONLY)
-
-// const checkRow = (grid) => {
-//   for (let i = 0; i < 6; i++) {
-//     for (let j = 0; j < 4; j++) {
-//       if (grid[i][j] == grid[i][j + 1] &&
-//           grid[i][j] == grid[i][j + 2] &&
-//           grid[i][j] == grid[i][j + 3]) {
-//         if (grid[i][j] == 'red') {
-//           return 'red'
-//         }
-//         if (grid[i][j] == 'yellow') {
-//           return 'yellow'
-//         }
-//       }
-//     }
-//   }
-// }
-
-// const checkColumn = (grid) => {
-//   for (let i = 0; i < 3; i++) {
-//     for (let j = 0; j < 7; j++) {
-//       if (grid[i][j] == grid[i + 1][j] &&
-//           grid[i][j] == grid[i + 2][j] &&
-//           grid[i][j] == grid[i + 3][j]) {
-//         if (grid[i][j] == 'red') {
-//           return 'red'
-//         }
-//         if (grid[i][j] == 'yellow') {
-//           return 'yellow'
-//         }
-//       }
-//     }
-//   }
-// }
-
-// const checkDiagonal1 = (grid) => {
-//   for (let i = 0; i < 3; i++) {
-//     for (let j = 0; j < 4; j++) {
-//       if (grid[i][j] == grid[i + 1][j + 1] &&
-//           grid[i][j] == grid[i + 2][j + 2] &&
-//           grid[i][j] == grid[i + 3][j + 3]) {
-//         if (grid[i][j] == 'red') {
-//           return 'red'
-//         }
-//         if (grid[i][j] == 'yellow') {
-//           return 'yellow'
-//         }
-//       }
-//     }
-//   }
-// }
-
-// const checkDiagonal2 = (grid) => {
-//   for (let i = 0; i < 3; i++) {
-//     for (let j = 6; j > 2; j--) {
-//       if (grid[i][j] == grid[i + 1][j - 1] &&
-//           grid[i][j] == grid[i + 2][j - 2] &&
-//           grid[i][j] == grid[i + 3][j - 3]) {
-//         if (grid[i][j] == 'red') {
-//           return 'red'
-//         }
-//         if (grid[i][j] == 'yellow') {
-//           return 'yellow'
-//         }
-//       }
-//     }
-//   }
-// }
+module.exports = {
+  getLowestAvailableRowInColumn,
+  checkRow,
+  takeTurn,
+  swapColour,
+  checkColumn,
+  checkDiagonal1,
+  checkDiagonal2,
+  takeX
+}

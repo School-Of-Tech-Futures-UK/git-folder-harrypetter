@@ -190,7 +190,7 @@ describe('Placing 4 alike coins next to each other in a row returns data:', () =
         grid[i][j + 1] = 'red'
         grid[i][j + 2] = 'red'
         grid[i][j + 3] = 'red'
-        const actualOutput = connect.checkRow(grid)
+        const actualOutput = connect.checkRow(grid, 4)
         expect(actualOutput).toBe('red')
       })
     }
@@ -212,7 +212,7 @@ describe('Placing 4 alike coins next to each other in a row returns data:', () =
         grid[i][j + 1] = 'yellow'
         grid[i][j + 2] = 'yellow'
         grid[i][j + 3] = 'yellow'
-        const actualOutput = connect.checkRow(grid)
+        const actualOutput = connect.checkRow(grid, 4)
         expect(actualOutput).toBe('yellow')
       })
     }
@@ -229,7 +229,7 @@ describe('Placing 4 alike coins next to each other in a row returns data:', () =
       ['yellow', 'yellow', null, 'yellow', 'yellow', null, null]
     ]
 
-    const actualOutput = connect.checkRow(grid)
+    const actualOutput = connect.checkRow(grid, 4)
     // Assert
     expect(actualOutput).toBe(undefined)
   })
@@ -253,7 +253,7 @@ describe('Placing 4 alike coins next to each other in a column returns data:', (
         grid[i + 1][j] = 'red'
         grid[i + 2][j] = 'red'
         grid[i + 3][j] = 'red'
-        const actualOutput = connect.checkColumn(grid)
+        const actualOutput = connect.checkColumn(grid, 4)
         expect(actualOutput).toBe('red')
       })
     }
@@ -275,7 +275,7 @@ describe('Placing 4 alike coins next to each other in a column returns data:', (
         grid[i + 1][j] = 'yellow'
         grid[i + 2][j] = 'yellow'
         grid[i + 3][j] = 'yellow'
-        const actualOutput = connect.checkColumn(grid)
+        const actualOutput = connect.checkColumn(grid, 4)
         expect(actualOutput).toBe('yellow')
       })
     }
@@ -292,7 +292,7 @@ describe('Placing 4 alike coins next to each other in a column returns data:', (
       ['yellow', null, null, null, null, null, null]
     ]
 
-    const actualOutput = connect.checkColumn(grid)
+    const actualOutput = connect.checkColumn(grid, 4)
     // Assert
     expect(actualOutput).toBe(undefined)
   })
@@ -316,7 +316,7 @@ describe('Placing 4 alike disks next to each other diagonally returns data:', ()
         grid[i + 1][j + 1] = 'red'
         grid[i + 2][j + 2] = 'red'
         grid[i + 3][j + 3] = 'red'
-        const actualOutput = connect.checkDiagonal1(grid)
+        const actualOutput = connect.checkDiagonal1(grid, 4)
         expect(actualOutput).toBe('red')
       })
     }
@@ -338,7 +338,7 @@ describe('Placing 4 alike disks next to each other diagonally returns data:', ()
         grid[i + 1][j + 1] = 'yellow'
         grid[i + 2][j + 2] = 'yellow'
         grid[i + 3][j + 3] = 'yellow'
-        const actualOutput = connect.checkDiagonal1(grid)
+        const actualOutput = connect.checkDiagonal1(grid, 4)
         expect(actualOutput).toBe('yellow')
       })
     }
@@ -355,7 +355,7 @@ describe('Placing 4 alike disks next to each other diagonally returns data:', ()
       [null, null, null, 'yellow', null, null, null]
     ]
 
-    const actualOutput = connect.checkDiagonal1(grid)
+    const actualOutput = connect.checkDiagonal1(grid, 4)
     // Assert
     expect(actualOutput).toBe(undefined)
   })
@@ -376,7 +376,7 @@ describe('Placing 4 alike disks next to each other diagonally returns data:', ()
         grid[i + 1][j - 1] = 'red'
         grid[i + 2][j - 2] = 'red'
         grid[i + 3][j - 3] = 'red'
-        const actualOutput = connect.checkDiagonal2(grid)
+        const actualOutput = connect.checkDiagonal2(grid, 4)
         expect(actualOutput).toBe('red')
       })
     }
@@ -398,7 +398,7 @@ describe('Placing 4 alike disks next to each other diagonally returns data:', ()
         grid[i + 1][j - 1] = 'yellow'
         grid[i + 2][j - 2] = 'yellow'
         grid[i + 3][j - 3] = 'yellow'
-        const actualOutput = connect.checkDiagonal2(grid)
+        const actualOutput = connect.checkDiagonal2(grid, 4)
         expect(actualOutput).toBe('yellow')
       })
     }
@@ -415,8 +415,23 @@ describe('Placing 4 alike disks next to each other diagonally returns data:', ()
       [null, null, null, null, null, null, null]
     ]
 
-    const actualOutput = connect.checkDiagonal2(grid)
+    const actualOutput = connect.checkDiagonal2(grid, 4)
     // Assert
     expect(actualOutput).toBe(undefined)
   })
 })
+
+// describe('When changing X', () => {
+//   it('the change is reflected in the UI', () => {
+//     // Arrange
+//     const global = {
+//       X: 3
+//     }
+//     // Act
+//     const expectedResult = `Connect ${global.X}`
+//     const actualResult = document.getElementById('header').innerHTML
+//     takeX()
+//     expect(actualResult).toBe(expectedResult)
+//   })
+// }
+// )

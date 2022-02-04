@@ -17,96 +17,102 @@
     <div class = "back">
         </br></br><h1 id="header"> Connect X</h1>
         <script src="connect4.js" crossorigin="anonymous"></script>
+        <script src="connect4.test.js" crossorigin="anonymous"></script>
+
             <p id="winner-display" style ="display: none;"></p>
             
-            <div class = "connectX">
+                <div class = "connectX">
+                    <label  for="xtext" id = "Xtext"> Change X (default is 4)</label><br>
+                    <input class = "xtext" type="text" id="xname"> <button id = "Xbutton" onClick= "takeX();">Submit</button>
+                </div></br>
+
+                                        <!--DIV CONTAINING ALL UI-->
+                <div class = "parent">
                 
-                <label  for="xtext" id = "Xtext"> Change X (default is 4)</label><br>
-                <input class = "xtext" type="text" id="xname"> <button id = "Xbutton" onClick= "takeX();">Submit</button>
-            </div></br>
-            <!--DIV CONTAINING ALL UI-->
-            <div class = "parent">
-            
-                <div class = "LHS"> <!--DIV CONTAINING LHS UI-->
-                    <div class = "names">
-                        <label id = "redtext">Enter red name:
-                        <input class = "textboxred" type="text" id="rname"></label>
-                        <label id = "yellowtext">Enter yellow name:
-                        <input  class = "textboxyellow" type="text" id="yname"></label>
-                        <button id = "namesbutton" onClick= "takeNames();">Submit</button>
+                    <div class = "LHS"> <!--DIV CONTAINING LHS UI-->
+                        <div class = "names">
+                            <label id = "redtext">Enter red name:
+                            <input class = "textboxred" type="text" id="rname"></label>
+                            <label id = "yellowtext">Enter yellow name:
+                            <input  class = "textboxyellow" type="text" id="yname"></label>
+                            <button id = "namesbutton" onClick= "takeNames();">Submit</button>
+                        
+
+                            <div class = "HighscoreBoard">
+                                <p style="font-family: Graphik;">Top 10 Highscores:</p>
+                                <p id = "highscore"style ="display: none;"></p>
+                            </div>
+                        </div>         
+                    </div>
+
+                    <div class = "RHS"> <!--DIV CONTAINING RHS UI-->
                     
-
-                        <div class = "HighscoreBoard">
-                            <p style="font-family: Graphik;">Top 10 Highscores:</p>
-                            <p id = "highscore"style ="display: none;"></p>
+                        <div id="connect4Board">
+                            <div class="row">
+                                <div class="col" id="row0-col0" onClick="boardClick(event);"> </div>
+                                <div class="col" id="row0-col1" onClick="boardClick(event);"> </div>
+                                <div class="col" id="row0-col2" onClick="boardClick(event);"> </div>
+                                <div class="col" id="row0-col3" onClick="boardClick(event);"> </div>
+                                <div class="col" id="row0-col4" onClick="boardClick(event);"> </div>
+                                <div class="col" id="row0-col5" onClick="boardClick(event);"> </div>
+                                <div class="col" id="row0-col6" onClick="boardClick(event);"> </div>
+                            </div>
+                            <div class=" row">
+                                <div class="col" id="row1-col0" onClick="boardClick(event);"> </div>
+                                <div class="col" id="row1-col1" onClick="boardClick(event);"> </div>
+                                <div class="col" id="row1-col2" onClick="boardClick(event);"> </div>
+                                <div class="col" id="row1-col3" onClick="boardClick(event);"> </div>
+                                <div class="col" id="row1-col4" onClick="boardClick(event);"> </div>
+                                <div class="col" id="row1-col5" onClick="boardClick(event);"> </div>
+                                <div class="col" id="row1-col6" onClick="boardClick(event);"> </div>
+                            </div>
+                            <div class="row">
+                                <div class="col" id="row2-col0" onClick="boardClick(event);"> </div>
+                                <div class="col" id="row2-col1" onClick="boardClick(event);"> </div>
+                                <div class="col" id="row2-col2" onClick="boardClick(event);"> </div>
+                                <div class="col" id="row2-col3" onClick="boardClick(event);"> </div>
+                                <div class="col" id="row2-col4" onClick="boardClick(event);"> </div>
+                                <div class="col" id="row2-col5" onClick="boardClick(event);"> </div>
+                                <div class="col" id="row2-col6" onClick="boardClick(event);"> </div>
+                            </div>
+                            <div class="row">
+                                <div class="col" id="row3-col0" onClick="boardClick(event);"> </div>
+                                <div class="col" id="row3-col1" onClick="boardClick(event);"> </div>
+                                <div class="col" id="row3-col2" onClick="boardClick(event);"> </div>
+                                <div class="col" id="row3-col3" onClick="boardClick(event);"> </div>
+                                <div class="col" id="row3-col4" onClick="boardClick(event);"> </div>
+                                <div class="col" id="row3-col5" onClick="boardClick(event);"> </div>
+                                <div class="col" id="row3-col6" onClick="boardClick(event);"> </div>
+                            </div>
+                            <div class="row">
+                                <div class="col" id="row4-col0" onClick="boardClick(event);">  </div>
+                                <div class="col" id="row4-col1" onClick="boardClick(event);">  </div>
+                                <div class="col" id="row4-col2" onClick="boardClick(event);">  </div>
+                                <div class="col" id="row4-col3" onClick="boardClick(event);">  </div>
+                                <div class="col" id="row4-col4" onClick="boardClick(event);">  </div>
+                                <div class="col" id="row4-col5" onClick="boardClick(event);">  </div>
+                                <div class="col" id="row4-col6" onClick="boardClick(event);">  </div>
+                            </div>
+                            <div class="row">
+                                <div class="col" id="row5-col0" onClick="boardClick(event);">  </div>
+                                <div class="col" id="row5-col1" onClick="boardClick(event);">  </div>
+                                <div class="col" id="row5-col2" onClick="boardClick(event);">  </div>
+                                <div class="col" id="row5-col3" onClick="boardClick(event);">  </div>
+                                <div class="col" id="row5-col4" onClick="boardClick(event);">  </div>
+                                <div class="col" id="row5-col5" onClick="boardClick(event);">  </div>
+                                <div class="col" id="row5-col6" onClick="boardClick(event);">  </div>
+                            </div>
+                            </br></br>
+                            <div class='buttoncasing'>
+                                <button id="reset-button" onClick = "resetGame();">Reset Game</button>
+                            </br></br>
+                            </div>
                         </div>
                     </div>
-                </div>
-
-                <div class = "RHS"> <!--DIV CONTAINING RHS UI-->
                 
-                    <div id="connect4Board">
-                        <div class="row">
-                            <div class="col" id="row0-col0" onClick="boardClick(event);"> </div>
-                            <div class="col" id="row0-col1" onClick="boardClick(event);"> </div>
-                            <div class="col" id="row0-col2" onClick="boardClick(event);"> </div>
-                            <div class="col" id="row0-col3" onClick="boardClick(event);"> </div>
-                            <div class="col" id="row0-col4" onClick="boardClick(event);"> </div>
-                            <div class="col" id="row0-col5" onClick="boardClick(event);"> </div>
-                            <div class="col" id="row0-col6" onClick="boardClick(event);"> </div>
-                        </div>
-                        <div class=" row">
-                            <div class="col" id="row1-col0" onClick="boardClick(event);"> </div>
-                            <div class="col" id="row1-col1" onClick="boardClick(event);"> </div>
-                            <div class="col" id="row1-col2" onClick="boardClick(event);"> </div>
-                            <div class="col" id="row1-col3" onClick="boardClick(event);"> </div>
-                            <div class="col" id="row1-col4" onClick="boardClick(event);"> </div>
-                            <div class="col" id="row1-col5" onClick="boardClick(event);"> </div>
-                            <div class="col" id="row1-col6" onClick="boardClick(event);"> </div>
-                        </div>
-                        <div class="row">
-                            <div class="col" id="row2-col0" onClick="boardClick(event);"> </div>
-                            <div class="col" id="row2-col1" onClick="boardClick(event);"> </div>
-                            <div class="col" id="row2-col2" onClick="boardClick(event);"> </div>
-                            <div class="col" id="row2-col3" onClick="boardClick(event);"> </div>
-                            <div class="col" id="row2-col4" onClick="boardClick(event);"> </div>
-                            <div class="col" id="row2-col5" onClick="boardClick(event);"> </div>
-                            <div class="col" id="row2-col6" onClick="boardClick(event);"> </div>
-                        </div>
-                        <div class="row">
-                            <div class="col" id="row3-col0" onClick="boardClick(event);"> </div>
-                            <div class="col" id="row3-col1" onClick="boardClick(event);"> </div>
-                            <div class="col" id="row3-col2" onClick="boardClick(event);"> </div>
-                            <div class="col" id="row3-col3" onClick="boardClick(event);"> </div>
-                            <div class="col" id="row3-col4" onClick="boardClick(event);"> </div>
-                            <div class="col" id="row3-col5" onClick="boardClick(event);"> </div>
-                            <div class="col" id="row3-col6" onClick="boardClick(event);"> </div>
-                        </div>
-                        <div class="row">
-                            <div class="col" id="row4-col0" onClick="boardClick(event);">  </div>
-                            <div class="col" id="row4-col1" onClick="boardClick(event);">  </div>
-                            <div class="col" id="row4-col2" onClick="boardClick(event);">  </div>
-                            <div class="col" id="row4-col3" onClick="boardClick(event);">  </div>
-                            <div class="col" id="row4-col4" onClick="boardClick(event);">  </div>
-                            <div class="col" id="row4-col5" onClick="boardClick(event);">  </div>
-                            <div class="col" id="row4-col6" onClick="boardClick(event);">  </div>
-                        </div>
-                        <div class="row">
-                            <div class="col" id="row5-col0" onClick="boardClick(event);">  </div>
-                            <div class="col" id="row5-col1" onClick="boardClick(event);">  </div>
-                            <div class="col" id="row5-col2" onClick="boardClick(event);">  </div>
-                            <div class="col" id="row5-col3" onClick="boardClick(event);">  </div>
-                            <div class="col" id="row5-col4" onClick="boardClick(event);">  </div>
-                            <div class="col" id="row5-col5" onClick="boardClick(event);">  </div>
-                            <div class="col" id="row5-col6" onClick="boardClick(event);">  </div>
-                        </div>
-                        </br></br>
-                        <button id="reset-button" onClick = "resetGame();">Reset Game</button>
-                    </div>
-            </div>
+                </div>
         </div>
-    </div>
-</body>
+    </body>
 
 
 </html>

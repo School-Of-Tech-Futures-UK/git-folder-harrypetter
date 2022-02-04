@@ -132,8 +132,6 @@ body {
 
 }
 
-.back{
-}
 
 #header{
     font-size: 170px;
@@ -176,13 +174,16 @@ body {
 
 .parent{
     display: flex;
+    flex-wrap:wrap;
     justify-content: center;
     gap: 30px;
 
 }
 
+
 .LHS{
     display: flex;
+    flex-wrap: wrap;
     flex-direction: row;
     align-content: center;
     font-size:xx-large;
@@ -190,6 +191,7 @@ body {
 
 .RHS{
     display: flex;
+    flex-wrap: wrap;
     flex-direction: row;
     align-content: center;
     justify-content: center;
